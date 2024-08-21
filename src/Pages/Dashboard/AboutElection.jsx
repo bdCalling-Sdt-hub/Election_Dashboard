@@ -3,6 +3,7 @@ import Title from '../../Shared/Title';
 import Icon from "../../assets/Icon.png"
 import { Table } from 'antd';
 import AddContentModal from '../../Components/AddContentModal';
+import { Link } from 'react-router-dom';
 
 const data =[
     {
@@ -90,7 +91,8 @@ const AboutElection = () => {
         {
             title: "Election",
             dataIndex: "election", 
-            key:"election"
+            key:"election" ,
+            render:(election)=> <Link to={election}> <p>{election}</p> </Link>
         } ,
 
     ]

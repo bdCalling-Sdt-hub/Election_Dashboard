@@ -179,27 +179,11 @@ const AdminProfile = () => {
                 Edit Your Profile
               </p> 
 <div className=" flex items-center justify-center"> 
-  <Form style={{  width:"75%"}}> 
-  <div 
-                style={{
-                  marginTop: 25,
-                  display: "grid",
-                  gridTemplateColumns: "auto auto",
-                 gap:10, 
-               
-                }}
-              >
+  <Form style={{  width:"60%"}} layout="vertical"> 
+  <div>
                 <div>
-                  <label
-                    style={{
-                      color: "#636363",
-                      fontSize: 14,
-                      fontWeight: 500,
-                    }}
-                  >
-                    User Name
-                  </label> 
-                  <Form.Item name="name"> 
+                  
+                  <Form.Item name="name" label={<p className=" text-[#636363] text-[14px] font-[500] py-1 ">  User Name </p>}> 
                   <Input
                     placeholder="Admin Marie"
                     style={{
@@ -215,17 +199,8 @@ const AdminProfile = () => {
                 </div> 
 
                 <div>
-                  <label
-                    style={{
-                    
-                      color: "#636363",
-                      fontSize: 14,
-                      fontWeight: 500,
-                    }}
-                  >
-                    Email
-                  </label> 
-                  <Form.Item name="email"> 
+                
+                  <Form.Item name="email" label={<p className=" text-[#636363] text-[14px] font-[500] py-1 ">  User Email </p>}> 
                   <Input
                     placeholder="Camille@gmail.com"
                     style={{
@@ -240,57 +215,7 @@ const AdminProfile = () => {
                  
                 </div>
 
-                <div>
-                  <label
-                    style={{
-                    
-                      color: "#636363",
-                      fontSize: 14,
-                      fontWeight: 500,
-                    }}
-                  >
-                    Contact no
-                  </label> 
-                  <Form.Item name="contact"> 
-                  <Input
-                    placeholder="+99007007007"
-                    style={{
-                      padding: "10px",
-                      color: "#818181",
-                      fontSize: 14,
-                      fontWeight: 400,
-                      margin: "8px 0px",
-                    }}
-                  />
-                  </Form.Item>
-                 
-                </div> 
-
-                <div>
-                  <label
-                    style={{
-                    
-                      color: "#636363",
-                      fontSize: 14,
-                      fontWeight: 500,
-                    }}
-                  >
-                    Address
-                  </label> 
-                  <Form.Item name="address"> 
-                  <Input
-                    placeholder="79/A Joker Vila, Gotham City"
-                    style={{
-                      padding: "10px",
-                      color: "#818181",
-                      fontSize: 14,
-                      fontWeight: 400,
-                      margin: "8px 0px",
-                    }}
-                  />
-                  </Form.Item>
-                  
-                </div>
+       
                 </div>
               <Form.Item   style={{
                         marginTop: 24,

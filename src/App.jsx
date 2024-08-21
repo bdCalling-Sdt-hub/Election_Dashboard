@@ -22,6 +22,10 @@ import About from "./Pages/Dashboard/About";
 import AboutElection from "./Pages/Dashboard/AboutElection";
 import CandidateDetails from "./Pages/Dashboard/CandidateDetails";
 import AddCandidateIssues from "./Pages/Dashboard/AddCandidateIssues";
+import State from "./Pages/Dashboard/State";
+import Election from "./Pages/Dashboard/Election";
+import LatestNews from "./Pages/Dashboard/LatestNews";
+import AddLatestNews from "./Pages/Dashboard/AddLatestNews";
 
 
 function App() {
@@ -44,6 +48,8 @@ function App() {
               <Route path="/feedbacks" element={<Feedbacks />} />
               <Route path="/subscriber-details" element={<SubscriberDetails />} />
               <Route path="/add-candidate" element={<AddCandidate />} />
+              <Route path="/add-state" element={<State />} />
+              <Route path="/add-election" element={<Election />} />
               <Route path="/candidate-details" element={<CandidateDetails />} /> 
               <Route path="/candidate-issues" element={<AddCandidateIssues/>} />
               <Route path="/about-elections" element={<AboutElection />} />
@@ -55,6 +61,8 @@ function App() {
               <Route path="/about" element={<About />} />
               <Route path="/privacy" element={<Disclaimer />} />          
               <Route path="/terms" element={<Terms />} />
+              <Route path="/latest-news" element={<LatestNews />} />
+              <Route path="/add-latest-news" element={<AddLatestNews />} />
             </Route>
 
             <Route path="/login" element={<Login />} />

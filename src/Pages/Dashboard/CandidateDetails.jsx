@@ -7,6 +7,8 @@ import { GoDotFill } from 'react-icons/go';
 import { FaRegEye } from 'react-icons/fa';
 import CandidateDetailsModal from '../../Components/CandidateDetailsModal';
 import { useNavigate } from 'react-router-dom';
+import { CiEdit } from 'react-icons/ci';
+import { MdDeleteOutline } from 'react-icons/md';
  
 const data =[
     {
@@ -270,6 +272,10 @@ const CandidateDetails = () => {
               >
                <FaRegEye className="text-xl font-semibold text-[#5C5C5C]" />
               </button>   
+              <button onClick={handleAdd} >
+               <CiEdit className="text-xl font-semibold text-[#5C5C5C]" />
+              </button>  
+              <button> <MdDeleteOutline  size={22}/> </button>   
             </div>
               ),
         }

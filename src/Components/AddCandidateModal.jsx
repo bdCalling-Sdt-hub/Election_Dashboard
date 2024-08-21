@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { PiImageThin } from "react-icons/pi";
 const { Option } = Select; 
 
-const AddCandidateModal = ({setOpen , open }) => { 
+const AddCandidateModal = ({setOpen , open , modalData }) => { 
     const [imgFile, setImgFile] = useState(null);
     const handleChange = (e) => {
       setImgFile(e.target.files[0]);
@@ -17,7 +17,8 @@ const AddCandidateModal = ({setOpen , open }) => {
         footer={false}          
         width={500}
       >  
-       <div className=' p-5'>
+       <div className=' p-5'> 
+        <p className=' pb-3 text-lg font-[500]'> {modalData ? "Update Candidate" : "Add Candidate"}</p>
        <Form>
             <div>
               <p className="text-[#6D6D6D] py-1">Candidate Name</p>

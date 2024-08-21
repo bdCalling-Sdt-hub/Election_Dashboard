@@ -6,6 +6,8 @@ import candidate from "../../assets/candidate.png"
 import { FaRegEye } from 'react-icons/fa';
 import AddCandidateModal from '../../Components/AddCandidateModal';
 import ShowCandidateDetails from '../../Components/ShowCandidateDetails';
+import { CiEdit } from 'react-icons/ci';
+import { MdDeleteOutline } from 'react-icons/md';
  
 const data =[
     {
@@ -170,6 +172,12 @@ const AddCandidate = () => {
               >
                <FaRegEye className="text-xl font-semibold text-[#5C5C5C]" />
               </button>   
+              <button
+               onClick={()=>{setOpen(true) , SetModalData(record?.key)}}
+              >
+               <CiEdit className="text-xl font-semibold text-[#5C5C5C]" />
+              </button>  
+              <button> <MdDeleteOutline  size={22}/> </button>   
             </div>
               ),
           }, 
@@ -197,7 +205,7 @@ const AddCandidate = () => {
             }}
           />     
 
- <AddCandidateModal open={open}  setOpen={setOpen}  /> 
+ <AddCandidateModal open={open}  setOpen={setOpen} modalData={modalData} /> 
  <ShowCandidateDetails showDetails={showDetails} setShowDetails={setShowDetails} modalData={modalData} />
 
         </div>

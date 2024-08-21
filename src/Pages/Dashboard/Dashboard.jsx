@@ -36,7 +36,15 @@ const Dashboard = () => {
       title: "Subscribers ",
       path: "/subscriber-details",
     
-    },
+    }, 
+    {
+      title:"Add State" ,
+      path:"/add-state"
+    } ,
+    {
+      title:"Add Election" ,
+      path:"/add-election"
+    } ,
     {
       title: "Add Candidate",
       path: "/add-candidate",
@@ -51,7 +59,6 @@ const Dashboard = () => {
      
     },
 
-   
         {
           title: "FAQ",
           path: "/faq",
@@ -68,11 +75,11 @@ const Dashboard = () => {
           title: "Terms & Condition",
           path: "/terms",
         }, 
-      
         {
-          title: "Profile",
-          path: "/admin-profile",
+          title: "Latest news",
+          path: "/latest-news",
         }, 
+    
    
     {
       title: "Log out",
@@ -116,7 +123,7 @@ const Dashboard = () => {
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: "15px",
+            gap: "8px",
             height: "100%",
             marginTop: 0,
           }}
@@ -203,7 +210,7 @@ const Dashboard = () => {
                 </Link>
             
             </li>
-          )).slice(4,6)} 
+          )).slice(4,8)} 
 
 <p className=" border border-[#D9D9D9] ms-[40px]"></p>  
 
@@ -246,7 +253,7 @@ const Dashboard = () => {
                 </Link>
             
             </li>
-          )).slice(6,11)}  
+          )).slice(8,13)}  
 <p className=" border border-[#D9D9D9] ms-[40px]"></p>   
 {linkItems.map((item, index) => (
             <li
@@ -287,7 +294,7 @@ const Dashboard = () => {
                 </Link>
             
             </li>
-          )).slice(11,13)} 
+          )).slice(13,15)} 
 
 
         </ul>

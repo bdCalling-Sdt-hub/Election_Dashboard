@@ -8,7 +8,6 @@ const { Option } = Select;
 const AddCandidateIssues = () => { 
     const editor = useRef(null);
     const [content, setContent] = useState("");
-    const [isLoading, seLoading] = useState(false);
   
     const config = {
       readonly: false,
