@@ -78,7 +78,13 @@ query:(value)=>({
 
   // Add candidate  page
   getCandidate:builder.query({
-    query:(value)=>`/candidate?searchTerm=${value}`
+    query:(value)=>{ 
+      const params = new URLSearchParams()  
+      if(value)params.append("searchTerm" , value)
+      return{
+        url:`/candidate?${params.toString()}`
+      }
+    }
   })  , 
 
   // add candidate  
