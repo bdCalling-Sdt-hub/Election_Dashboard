@@ -2,10 +2,44 @@ import React, { useState, useRef, useMemo, useEffect } from "react";
 import JoditEditor from "jodit-react";
 import Swal from "sweetalert2";
 import Title from "../../Shared/Title";
+import { useGetPrivacyQuery, useUpdatePrivacyMutation } from "../../redux/apiSlices/DashboardSlice";
 
 const Privacy = () => {
   const editor = useRef(null);
-  const [content, setContent] = useState("");
+  const [content, setContent] = useState(""); 
+  const {data:privacy , refetch} = useGetPrivacyQuery()  
+  const [updatePrivacy] = useUpdatePrivacyMutation()
+  console.log(privacy);
+ 
+useEffect(()=>{ 
+   
+  setContent(privacy?.data?.content )
+} ,[privacy?.data?.content]) 
+
+const handleSubmit =async()=>{
+await updatePrivacy({content:content}).then((res)=>{
+  if(res?.data?.success){
+    Swal.fire({
+        text:res?.data?.message,
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        refetch(); 
+        
+      })
+}else{
+    Swal.fire({
+        title: "Oops",
+        text: res?.error?.data?.message,
+        icon: "error",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+  
+}
+})
+}
 
   const config = {
     readonly: false,
@@ -37,7 +71,7 @@ const Privacy = () => {
           alignItems: "center",
         }}
       >
-        <button
+        <button onClick={()=>handleSubmit()}
           style={{
             height: 44,
             width: "20%",

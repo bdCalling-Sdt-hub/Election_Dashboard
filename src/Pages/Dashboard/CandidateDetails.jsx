@@ -9,228 +9,87 @@ import CandidateDetailsModal from '../../Components/CandidateDetailsModal';
 import { useNavigate } from 'react-router-dom';
 import { CiEdit } from 'react-icons/ci';
 import { MdDeleteOutline } from 'react-icons/md';
+import { useDeleteCandidateIssuesMutation, useGetCandidateQuery } from '../../redux/apiSlices/DashboardSlice';
+import { imageUrl } from '../../redux/api/apislice';
+import Swal from 'sweetalert2';
  
-const data =[
-    {
-        key:1 ,
-       candidate:{
-        name:"Chose Oliver" ,
-        img: candidate
-       } ,
-       issues:[
-        {
-            title:"On  Climate Change " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quas distinctio eveniet at iusto ipsa rem aliquid qui cupiditate ex iure dignissimos dolorum, impedit quasi rerum nam consequatur maxime atque itaque?" 
-        } ,
-        {
-            title:"On the Israel - Palestine  Conflict " ,
-            description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, vitae, doloribus atque assumenda commodi facere sed nulla corporis beatae accusantium quidem ipsa rerum similique fugiat error distinctio vel quis temporibus." 
-        } ,
-        {
-            title:"On Reproductive Rights " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur excepturi maxime sint animi reprehenderit distinctio quas, deserunt odio, laboriosam velit voluptate neque provident cumque repellendus aut sed doloremque magni harum!"
-        } ,
-       ]
-    } ,
-    {
-        key:2 ,
-       candidate:{
-        name:"Chose Oliver" ,
-        img: candidate
-       } ,
-       issues:[
-        {
-            title:"On  Climate Change " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quas distinctio eveniet at iusto ipsa rem aliquid qui cupiditate ex iure dignissimos dolorum, impedit quasi rerum nam consequatur maxime atque itaque?" 
-        } ,
-        {
-            title:"On the Israel - Palestine  Conflict " ,
-            description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, vitae, doloribus atque assumenda commodi facere sed nulla corporis beatae accusantium quidem ipsa rerum similique fugiat error distinctio vel quis temporibus." 
-        } ,
-        {
-            title:"On Reproductive Rights " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur excepturi maxime sint animi reprehenderit distinctio quas, deserunt odio, laboriosam velit voluptate neque provident cumque repellendus aut sed doloremque magni harum!"
-        } ,
-       ]
-    } ,
-    {
-        key:3,
-       candidate:{
-        name:"Chose Oliver" ,
-        img: candidate
-       } ,
-       issues:[
-        {
-            title:"On  Climate Change " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quas distinctio eveniet at iusto ipsa rem aliquid qui cupiditate ex iure dignissimos dolorum, impedit quasi rerum nam consequatur maxime atque itaque?" 
-        } ,
-        {
-            title:"On the Israel - Palestine  Conflict " ,
-            description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, vitae, doloribus atque assumenda commodi facere sed nulla corporis beatae accusantium quidem ipsa rerum similique fugiat error distinctio vel quis temporibus." 
-        } ,
-        {
-            title:"On Reproductive Rights " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur excepturi maxime sint animi reprehenderit distinctio quas, deserunt odio, laboriosam velit voluptate neque provident cumque repellendus aut sed doloremque magni harum!"
-        } ,
-       ]
-    } ,
-    {
-        key:4 ,
-       candidate:{
-        name:"Chose Oliver" ,
-        img: candidate
-       } ,
-       issues:[
-        {
-            title:"On  Climate Change " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quas distinctio eveniet at iusto ipsa rem aliquid qui cupiditate ex iure dignissimos dolorum, impedit quasi rerum nam consequatur maxime atque itaque?" 
-        } ,
-        {
-            title:"On the Israel - Palestine  Conflict " ,
-            description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, vitae, doloribus atque assumenda commodi facere sed nulla corporis beatae accusantium quidem ipsa rerum similique fugiat error distinctio vel quis temporibus." 
-        } ,
-        {
-            title:"On Reproductive Rights " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur excepturi maxime sint animi reprehenderit distinctio quas, deserunt odio, laboriosam velit voluptate neque provident cumque repellendus aut sed doloremque magni harum!"
-        } ,
-       ]
-    } ,
-    {
-        key:5,
-       candidate:{
-        name:"Chose Oliver" ,
-        img: candidate
-       } ,
-       issues:[
-        {
-            title:"On  Climate Change " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quas distinctio eveniet at iusto ipsa rem aliquid qui cupiditate ex iure dignissimos dolorum, impedit quasi rerum nam consequatur maxime atque itaque?" 
-        } ,
-        {
-            title:"On the Israel - Palestine  Conflict " ,
-            description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, vitae, doloribus atque assumenda commodi facere sed nulla corporis beatae accusantium quidem ipsa rerum similique fugiat error distinctio vel quis temporibus." 
-        } ,
-        {
-            title:"On Reproductive Rights " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur excepturi maxime sint animi reprehenderit distinctio quas, deserunt odio, laboriosam velit voluptate neque provident cumque repellendus aut sed doloremque magni harum!"
-        } ,
-       ]
-    } ,
-    {
-        key:6 ,
-       candidate:{
-        name:"Chose Oliver" ,
-        img: candidate
-       } ,
-       issues:[
-        {
-            title:"On  Climate Change " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quas distinctio eveniet at iusto ipsa rem aliquid qui cupiditate ex iure dignissimos dolorum, impedit quasi rerum nam consequatur maxime atque itaque?" 
-        } ,
-        {
-            title:"On the Israel - Palestine  Conflict " ,
-            description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, vitae, doloribus atque assumenda commodi facere sed nulla corporis beatae accusantium quidem ipsa rerum similique fugiat error distinctio vel quis temporibus." 
-        } ,
-        {
-            title:"On Reproductive Rights " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur excepturi maxime sint animi reprehenderit distinctio quas, deserunt odio, laboriosam velit voluptate neque provident cumque repellendus aut sed doloremque magni harum!"
-        } ,
-       ]
-    } ,
-    {
-        key:7 ,
-       candidate:{
-        name:"Chose Oliver" ,
-        img: candidate
-       } ,
-       issues:[
-        {
-            title:"On  Climate Change " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quas distinctio eveniet at iusto ipsa rem aliquid qui cupiditate ex iure dignissimos dolorum, impedit quasi rerum nam consequatur maxime atque itaque?" 
-        } ,
-        {
-            title:"On the Israel - Palestine  Conflict " ,
-            description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, vitae, doloribus atque assumenda commodi facere sed nulla corporis beatae accusantium quidem ipsa rerum similique fugiat error distinctio vel quis temporibus." 
-        } ,
-        {
-            title:"On Reproductive Rights " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur excepturi maxime sint animi reprehenderit distinctio quas, deserunt odio, laboriosam velit voluptate neque provident cumque repellendus aut sed doloremque magni harum!"
-        } ,
-       ]
-    } ,
-    {
-        key:8 ,
-       candidate:{
-        name:"Chose Oliver" ,
-        img: candidate
-       } ,
-       issues:[
-        {
-            title:"On  Climate Change " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quas distinctio eveniet at iusto ipsa rem aliquid qui cupiditate ex iure dignissimos dolorum, impedit quasi rerum nam consequatur maxime atque itaque?" 
-        } ,
-        {
-            title:"On the Israel - Palestine  Conflict " ,
-            description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, vitae, doloribus atque assumenda commodi facere sed nulla corporis beatae accusantium quidem ipsa rerum similique fugiat error distinctio vel quis temporibus." 
-        } ,
-        {
-            title:"On Reproductive Rights " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur excepturi maxime sint animi reprehenderit distinctio quas, deserunt odio, laboriosam velit voluptate neque provident cumque repellendus aut sed doloremque magni harum!"
-        } ,
-       ]
-    } ,
-    {
-        key:9 ,
-       candidate:{
-        name:"Chose Oliver" ,
-        img: candidate
-       } ,
-       issues:[
-        {
-            title:"On  Climate Change " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quas distinctio eveniet at iusto ipsa rem aliquid qui cupiditate ex iure dignissimos dolorum, impedit quasi rerum nam consequatur maxime atque itaque?" 
-        } ,
-        {
-            title:"On the Israel - Palestine  Conflict " ,
-            description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, vitae, doloribus atque assumenda commodi facere sed nulla corporis beatae accusantium quidem ipsa rerum similique fugiat error distinctio vel quis temporibus." 
-        } ,
-        {
-            title:"On Reproductive Rights " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur excepturi maxime sint animi reprehenderit distinctio quas, deserunt odio, laboriosam velit voluptate neque provident cumque repellendus aut sed doloremque magni harum!"
-        } ,
-       ]
-    } ,
-    {
-        key:10 ,
-       candidate:{
-        name:"Chose Oliver" ,
-        img: candidate
-       } ,
-       issues:[
-        {
-            title:"On  Climate Change " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Quas distinctio eveniet at iusto ipsa rem aliquid qui cupiditate ex iure dignissimos dolorum, impedit quasi rerum nam consequatur maxime atque itaque?" 
-        } ,
-        {
-            title:"On the Israel - Palestine  Conflict " ,
-            description:"Lorem ipsum dolor sit amet consectetur adipisicing elit. Deserunt, vitae, doloribus atque assumenda commodi facere sed nulla corporis beatae accusantium quidem ipsa rerum similique fugiat error distinctio vel quis temporibus." 
-        } ,
-        {
-            title:"On Reproductive Rights " ,
-            description:"Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur excepturi maxime sint animi reprehenderit distinctio quas, deserunt odio, laboriosam velit voluptate neque provident cumque repellendus aut sed doloremque magni harum!"
-        } ,
-       ]
-    } ,
-]
 
 const CandidateDetails = () => { 
     const [open , setOpen]=useState(false)  
-    const [modalData , SetModalData] = useState(null)  
+    const [modalData , SetModalData] = useState(null)   
+   const [searchValue , setSearchValue]= useState("") 
+   console.log(searchValue);
     const navigate = useNavigate()
+    const {data:candidate , refetch} = useGetCandidateQuery(searchValue)    
+    const [deleteCandidateIssues] = useDeleteCandidateIssuesMutation()
+    console.log(candidate);  
+
+    const data = candidate?.data?.map((value , index)=>({
+        key:index+1  ,  
+        id: value?._id ,
+        candidate:{
+  name:value?.name ,
+  img: value?.image.startsWith("https")? value?.image : `${imageUrl}${value?.image}`
+        }  ,
+      party:value?.politicalAffiliation , 
+      state: value?.state ,
+      election: value?.election ,
+      color: value?.color ,
+      issues:value?.issues
+      })) 
+
+      const handleUpdate=(value)=>{ 
+        if(value?.issues.length !== 0){
+        navigate(`/candidate-issues?value=${encodeURIComponent(JSON.stringify(value))}`)
+        } else{
+            navigate("/candidate-issues")
+        }
+      }
 
     const handleAdd =()=>{
         navigate("/candidate-issues")
+    }  
+
+    const handleSearch =(e)=>{
+      const data = e?.target?.value  
+      setSearchValue(data)
+     
     }
+
+    const handleDelete =(id)=>{
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              await deleteCandidateIssues(id).then((res) => {
+                if (res?.data?.success) {
+                  Swal.fire({
+                    text: res?.data?.message,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500,
+                  }).then(() => {
+                    refetch();
+                  });
+                } else {
+                  Swal.fire({
+                    title: "Oops",
+                    text: res?.error?.data?.message,
+                    icon: "error",
+                    timer: 1500,
+                    showConfirmButton: false,
+                  });
+                }
+              });
+            }
+          });
+    } 
 
     const columns=[
         {
@@ -252,11 +111,12 @@ const CandidateDetails = () => {
             title: "Key Voter Issues",
             dataIndex: "issues", 
             key: "issues", 
-            render:(issues)=>(
+            render:(issues)=>( 
+                issues.length !== 0 ?
                 issues?.map((value , index)=><p key={index} className='  text-sm flex items-center  gap-1 leading-6'> 
                     <span> <GoDotFill/></span> 
-                    <span>{value?.title} </span>
-                </p>)
+                    <span>{value?.question} </span>
+                </p>) : "No issues"
             )
         } ,
         {
@@ -272,10 +132,10 @@ const CandidateDetails = () => {
               >
                <FaRegEye className="text-xl font-semibold text-[#5C5C5C]" />
               </button>   
-              <button onClick={handleAdd} >
+              <button onClick={()=>handleUpdate(record)} >
                <CiEdit className="text-xl font-semibold text-[#5C5C5C]" />
               </button>  
-              <button> <MdDeleteOutline  size={22}/> </button>   
+              <button onClick={()=>handleDelete(record?.id)}> <MdDeleteOutline  size={22}/> </button>   
             </div>
               ),
         }
@@ -286,7 +146,7 @@ const CandidateDetails = () => {
       <div className=" flex  items-center justify-between mb-5">
       <Title className="">Candidate Issues details</Title> 
       <div className=" flex items-center gap-5 ">
-      <Input  placeholder="Search Something...." prefix={<IoSearchOutline className="text-2xl text-[#07254A]" />} style={{ width:"400px" , height:"45px"}} />  
+      <Input  placeholder="Search Something...." prefix={<IoSearchOutline className="text-2xl text-[#07254A]" />} style={{ width:"400px" , height:"45px"}} onChange={(e)=>handleSearch(e)} />  
       <button className=" flex gap-2 text-white bg-[#07254A]  h-[45px] rounded-lg  px-4 justify-center items-center" onClick={handleAdd}> 
         <span className=" font-[400] text-xl">+</span> 
         <span className=" font-[450]">Add Details</span>

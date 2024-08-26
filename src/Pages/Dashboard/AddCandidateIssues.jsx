@@ -1,32 +1,99 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Title from '../../Shared/Title';
 import { IoIosArrowRoundBack } from "react-icons/io";
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Button, Form, Input, Select } from 'antd';
 import JoditEditor from 'jodit-react';
+import { useCandidateIssuesMutation, useGetCandidateQuery } from '../../redux/apiSlices/DashboardSlice';
+import Swal from 'sweetalert2';
 const { Option } = Select; 
 const AddCandidateIssues = () => { 
-    const editor = useRef(null);
-    const [content, setContent] = useState("");
   
-    const config = {
-      readonly: false,
-      placeholder: "Start typings...",
-      style: {
-        height: 100,
-      },
+    const [candidateInfo , setCandidateInfo]=useState(null) 
+    console.log(candidateInfo);
+    const {data:candidate , refetch} = useGetCandidateQuery()   
+    const [candidateIssues] = useCandidateIssuesMutation()
+    console.log(candidate);
+    const location = useLocation(); 
+    const navigate = useNavigate()
+    const queryParams = new URLSearchParams(location.search);
+    const value = queryParams.get('value');
+    const newsValue = value ? JSON.parse(decodeURIComponent(value)) : null;  
+    console.log(newsValue); 
+    const [issues, setIssues] = useState([
+      { question: '', answer: '' },
+      { question: '', answer: '' },
+      { question: '', answer: '' }
+    ]); 
+    console.log(issues); 
+
+    useEffect(()=>{ 
+      if(newsValue){
+        setIssues(newsValue?.issues)      
+      }
+    },[])  
+  
+    const editorRefs = useRef([]);
+  
+    const handleInputChange = (index, value) => {
+      const updatedIssues = [...issues];
+      updatedIssues[index].question = value;
+      setIssues(updatedIssues);
     };
+  
+    const handleEditorChange = (index, newContent) => {
+      const updatedIssues = [...issues];
+      updatedIssues[index].answer = newContent;
+      setIssues(updatedIssues);
+    };
+
+    // candidate id  
+    const handleSelectChange =(id)=>{ 
+      const selectedCandidate = candidate?.data?.find(candidate => candidate._id === id); 
+      setCandidateInfo(selectedCandidate)
+    } 
+
+    const onFinish=async(values)=>{ 
+      const id =candidateInfo?._id 
+      const value ={
+        issues:issues
+      }
+    await candidateIssues({id ,value }).then((res)=>{
+      if(res?.data?.success){
+        Swal.fire({
+            text:res?.data?.message,
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            refetch(); 
+            navigate("/candidate-details")
+          })
+    }else{
+        Swal.fire({
+            title: "Oops",
+            text: res?.error?.data?.message,
+            icon: "error",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+      
+    }
+    })
+    }
+  
+  
     return (
         <div>
             <div className=' flex  gap-3 items-center'>
   <Link to="/candidate-details"  className='pt-2 flex items-center gap-1'>  <IoIosArrowRoundBack size={24}  /> <span>  Back </span> </Link>  
-  <Title>Add Candidates Issues</Title>  
+  <Title>{newsValue?"Update Candidates Issues":"Add Candidates Issues"}</Title>  
   </div> 
 
 
-  <div className='w-[80%] mx-14'>
+  <div className='w-[80%] '>
   <div className=' mt-5  bg-[#F0F0F0] rounded-xl p-8'>
-<Form className=' w-full'> 
+<Form className=' w-full' onFinish={onFinish} > 
 <div>
             <p className="text-[#6D6D6D] py-1 text-lg">Select Candidate </p> 
             <Form.Item
@@ -38,67 +105,39 @@ const AddCandidateIssues = () => {
           },
         ]}
       >
-        <Select placeholder="Select your Candidate" style={{height:"45px" , width:"75%"}}>
-          <Option value="democratic ">Chose Oliver</Option>
-          <Option value="republican">Joe Biden</Option>
-          <Option value="libertarian">Donald Trump</Option>
-          <Option value="green">Robert F. Kennedy Jr.</Option>
-          <Option value="Others">Donald Trump</Option>
+        <Select placeholder="Select your Candidate" style={{height:"45px" , width:"75%"}} onChange={handleSelectChange} defaultValue={newsValue? newsValue?.candidate?.name : null} > 
+          {
+            candidate?.data?.map((value , index)=><Option  key={index} value={value?._id} >{value?.name}</Option>)
+          }
+
         </Select>
       </Form.Item>
-            </div>  
+            </div>   
 
-            <div className='mb-5'>
-                <p className='text-[#6D6D6D] py-1 text-lg'> Key Voter Issus(1)</p> 
-                <Form.Item name="voterIssue1"> 
-<Input style={{ height:"45px" , width:"75%"}} /> 
-<div  className=' my-3'> 
-<JoditEditor
-          ref={editor}
-          value={content}
-          config={config}
-          tabIndex={1}
-          onBlur={(newContent) => setContent(newContent)}
-          onChange={(newContent) => {}}
-        />
- </div>
-                </Form.Item>
-            </div>  
+            {[...Array(3)].map((_, index) => (
+        <div key={index} className="mb-5">
+          <p className="text-[#6D6D6D] py-1 text-lg">Key Voter Issues ({index + 1})</p>
+          <Form.Item name={`voterIssue${index + 1}`}>
+            <Input
+              style={{ height: '45px', width: '75%' }}
+              value={issues[index].question}
+              onChange={(e) => handleInputChange(index, e.target.value)}
+              placeholder="Enter the issue (e.g., On Climate Change)"
+            />
+            <div className="my-3">
+              <JoditEditor
+                ref={(el) => (editorRefs.current[index] = el)}
+                value={issues[index].answer}
+                config={{ readonly: false }}
+                tabIndex={1}
+                onBlur={(newContent) => handleEditorChange(index, newContent)}
+                onChange={() => {}}
+              />
+            </div>
+          </Form.Item>
+        </div>
+      ))}
 
-
-            <div className='mb-5'>
-                <p className='text-[#6D6D6D] py-1 text-lg'> Key Voter Issus(2)</p> 
-                <Form.Item name="voterIssue1"> 
-<Input style={{ height:"45px" , width:"75%"}} /> 
-<div  className=' my-3'> 
-<JoditEditor
-          ref={editor}
-          value={content}
-          config={config}
-          tabIndex={1}
-          onBlur={(newContent) => setContent(newContent)}
-          onChange={(newContent) => {}}
-        />
- </div>
-                </Form.Item>
-            </div> 
-
-            <div className=''>
-                <p className='text-[#6D6D6D] py-1 text-lg'> Key Voter Issus(3)</p> 
-                <Form.Item name="voterIssue1"> 
-<Input style={{ height:"45px" , width:"75%"}} /> 
-<div  className=' my-3'> 
-<JoditEditor
-          ref={editor}
-          value={content}
-          config={config}
-          tabIndex={1}
-          onBlur={(newContent) => setContent(newContent)}
-          onChange={(newContent) => {}}
-        />
- </div>
-                </Form.Item>
-            </div> 
 
 <Form.Item className='text-end'> 
   <Button htmlType='submit' style={{

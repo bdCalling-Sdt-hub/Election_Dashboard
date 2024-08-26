@@ -1,71 +1,63 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Title from '../../Shared/Title'; 
 import JoditEditor from "jodit-react";
-import { Form, Input } from 'antd';
-import { PiImageThin } from 'react-icons/pi';
+import { useGetAboutQuery, useUpdateAboutMutation } from '../../redux/apiSlices/DashboardSlice';
+import Swal from 'sweetalert2';
+
 
 const About = () => { 
-    const [imgFile, setImgFile] = useState(null);
-    const handleChange = (e) => {
-      setImgFile(e.target.files[0]);
-    }; 
+
     const editor = useRef(null);
-    const [content, setContent] = useState("");
-  
+    const [content, setContent] = useState(""); 
+    const {data:about , refetch} = useGetAboutQuery() 
+    const [updateAbout] =useUpdateAboutMutation()
+   
+useEffect(()=>{
+  setContent(about?.data?.content)
+} ,[about?.data?.content])
+
     const config = {
-      readonly: false,
+      readonly: false, 
+      uploader: {
+        insertImageAsBase64URI: true,
+    },
       placeholder: "Start typings...",
       style: {
         height: 400,
       },
-    }; 
+    };  
+
+    const handleSubmit =async()=>{
+      await updateAbout({content:content}).then((res)=>{
+        if(res?.data?.success){
+          Swal.fire({
+              text:res?.data?.message,
+              icon: "success",
+              showConfirmButton: false,
+              timer: 1500,
+            }).then(() => {
+              refetch(); 
+              
+            })
+      }else{
+          Swal.fire({
+              title: "Oops",
+              text: res?.error?.data?.message,
+              icon: "error",
+              timer: 1500,
+              showConfirmButton: false,
+            });
+        
+      }
+      })
+    }
     return (
         <div>
             <Title className="">About Us</Title>  
-            <Form className='w-2/3 my-4 ' layout='vertical'>  
-                <Form.Item name="name" label={<p className='text-[#6D6D6D] '>Name:</p>}> 
-                <Input style={{ height:"45px"}} />
-                </Form.Item>  
-                <div>
-                <p className="text-[#6D6D6D] py-1">Candidate Image:</p> 
-                <label
-                htmlFor="image"
-                style={{ display: "block", backgroundColor:"white" }}
-                className="p-3 border rounded-lg"
-              > 
-              
-                <Form.Item name="image" >
-                  <div className="flex justify-center items-center w-full h-full   py-4">
-                    {imgFile ? (
-                      <img src={URL.createObjectURL(imgFile)} alt="" />
-                    ) 
-                     : (
-                      <PiImageThin className="text-7xl flex items-center justify-center text-[#666666] font-[400]" />
-                    )}
-                  </div>
-
-                  <div className="hidden">
-                    <Input
-                      id="image"
-                      type="file"
-                      onInput={handleChange}
-                      style={{
-                        border: "1px solid #E0E4EC",
-                        height: "52px",
-                        background: "white",
-                        borderRadius: "8px",
-                        outline: "none",
-                      }}
-                    />
-                  </div>
-                </Form.Item>
-              </label>
-                </div>
-          
-            </Form> 
+           
 
             <div> 
-            <p className="text-[#6D6D6D] py-1">Details:</p> 
+        
         <JoditEditor
           ref={editor}
           value={content}
@@ -83,7 +75,7 @@ const About = () => {
           alignItems: "center",
         }}
       >
-        <button
+        <button onClick={()=>handleSubmit()}
           style={{
             height: 44,
             width: "20%",

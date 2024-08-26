@@ -2,7 +2,7 @@ import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import "./App.css";
 import Dashboard from "./Pages/Dashboard/Dashboard";
 import DonationHistory from "./Pages/Dashboard/DonationHistory";
-import Notification from "./Pages/Dashboard/Notification";
+
 import Otp from "./Pages/Auth/Otp";
 import Login from "./Pages/Auth/Login";
 import UpdatePassword from "./Pages/Auth/UpdatePassword";
@@ -26,12 +26,15 @@ import State from "./Pages/Dashboard/State";
 import Election from "./Pages/Dashboard/Election";
 import LatestNews from "./Pages/Dashboard/LatestNews";
 import AddLatestNews from "./Pages/Dashboard/AddLatestNews";
+import { Provider } from "react-redux";
+import { store } from "./redux/store";
 
 
 function App() {
   return (
     <>
-      <div className="maincontainer">
+      <div className="maincontainer"> 
+        <Provider store={store} > 
         <Router>
           <Routes>
             <Route
@@ -54,7 +57,7 @@ function App() {
               <Route path="/candidate-issues" element={<AddCandidateIssues/>} />
               <Route path="/about-elections" element={<AboutElection />} />
             
-              <Route path="/notification" element={<Notification />} />
+            
              
               <Route path="/admin-profile" element={<AdminProfile />} />
               <Route path="/faq" element={<FAQ />} />
@@ -72,6 +75,8 @@ function App() {
             <Route path="*" element={<NotFound />} />
           </Routes>
         </Router>
+           </Provider>
+    
       </div>
     </>
   );

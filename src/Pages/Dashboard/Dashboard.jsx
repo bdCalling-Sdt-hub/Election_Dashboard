@@ -2,20 +2,31 @@ import { Input, Layout, Badge } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import Logo from "../../assets/logo.png";
-
+import person from "../../assets/person.png";
 
 import {
   RiNotification2Line,
 } from "react-icons/ri";
+import { useGetProfileQuery } from "../../redux/apiSlices/AuthSlice";
+import { imageUrl } from "../../redux/api/apislice";
 
 const { Header, Sider, Content } = Layout;
 
 
 const Dashboard = () => {
-  const [setting, setSetting] = useState(false);
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
-  console.log(setting);
+  const { pathname } = useLocation(); 
+  const [image ,setImage] = useState(null) 
+  const {data} = useGetProfileQuery()   
+  const userInfo = data?.data
+  console.log(data); 
+  const navigate = useNavigate();  
+
+  useEffect(()=>{
+    const imgUrl = userInfo?.image ? userInfo?.image.startsWith("https") ? userInfo?.image : `${imageUrl}${userInfo?.image}`   : person
+    setImage(imgUrl)
+   
+     } ,[userInfo , setImage])
+ 
 
 
   const linkItems = [
@@ -324,42 +335,7 @@ const Dashboard = () => {
               justifyContent: "space-between",
             }}
           >
-            <Link to="/notification">
-              <div
-                style={{
-                  background: "#F2F2F2",
-                  width: 45,
-                  height: 45,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderRadius: "50%",
-                  position: "relative",
-                }}
-              >
-                <RiNotification2Line color="#07254A" size={22} />
-
-                <div
-                  style={{
-                    width: "15px",
-                    height: "15px",
-                    borderRadius: "50%",
-                    background: "#9C1E2E",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    color: "white",
-                    position: "absolute",
-                    top: 8,
-                    right: 10,
-                    fontWeight: "500",
-                    fontSize: 9,
-                  }}
-                >
-                  5
-                </div>
-              </div>
-            </Link>
+           
             <Link
               to={"/admin-profile"}
               style={{
@@ -373,7 +349,7 @@ const Dashboard = () => {
               }}
             >
               <img
-                src="https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__"
+                src={image}
                 style={{
                   width: "44px",
                   height: "44px",
@@ -391,7 +367,7 @@ const Dashboard = () => {
                   width: 200,
                 }}
               >
-               Mithila
+               {userInfo?.name}
               </h2>
             </Link>
           </div>

@@ -4,72 +4,61 @@ import Icon from "../../assets/Icon.png"
 import { Table } from 'antd';
 import AddContentModal from '../../Components/AddContentModal';
 import { Link } from 'react-router-dom';
-
-const data =[
-    {
-        key: 1 ,
-        title:"Democratic Party" ,
-        Icon: Icon,
-        election:"https://vote.gov/register/alabama"
-    } ,
-    {
-        key: 2 ,
-        title:"Republican Party" ,
-        Icon: Icon,
-        election:"https://vote.gov/register/alabama"
-    } ,
-    {
-        key: 3 ,
-        title:"Libertarian Party" ,
-        Icon: Icon,
-        election:"https://vote.gov/register/alabama"
-    } ,
-    {
-        key: 4 ,
-        title:"Green Party" ,
-        Icon: Icon,
-        election:"https://vote.gov/register/alabama"
-    } ,
-    {
-        key: 5 ,
-        title:"Others" ,
-        Icon: Icon,
-        election:"https://vote.gov/register/alabama"
-    } ,
-    {
-        key: 6 ,
-        title:"Democratic Party" ,
-        Icon: Icon,
-        election:"https://vote.gov/register/alabama"
-    } ,
-    {
-        key: 7,
-        title:"Republican Party" ,
-        Icon: Icon,
-        election:"https://vote.gov/register/alabama"
-    } ,
-    {
-        key: 8 ,
-        title:"Libertarian Party" ,
-        Icon: Icon,
-        election:"https://vote.gov/register/alabama"
-    } ,
-    {
-        key: 9 ,
-        title:"Green Party" ,
-        Icon: Icon,
-        election:"https://vote.gov/register/alabama"
-    } ,
-    {
-        key: 10 ,
-        title:"Others" ,
-        Icon: Icon,
-        election:"https://vote.gov/register/alabama"
-    } ,
-]
+import { useDeleteAboutElectionMutation, useGetAboutElectionQuery } from '../../redux/apiSlices/DashboardSlice';
+import { imageUrl } from '../../redux/api/apislice';
+import { MdDeleteOutline } from 'react-icons/md';
+import { CiEdit } from 'react-icons/ci';
+import Swal from 'sweetalert2';
 
 const AboutElection = () => { 
-    const [open , setOpen] = useState(false) 
+    const [open , setOpen] = useState(false)   
+    const [modalData , setModalData] = useState(null)
+    const {data:aboutElection , refetch} = useGetAboutElectionQuery()   
+    const [page ,setPage]=useState(1)
+    const [deleteAboutElection] = useDeleteAboutElectionMutation()
+    console.log(aboutElection); 
+    const data = aboutElection?.data?.map((value , index)=>({
+        key: index+1 ,
+        title:value?.title , 
+        id:value?._id ,
+        Icon: value?.image.startsWith("https")? value?.image : `${imageUrl}${value?.image}`,
+        election: value?.url
+    })) 
+
+    const handleDelete =(id)=>{
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              await deleteAboutElection(id).then((res) => {
+                if (res?.data?.success) {
+                  Swal.fire({
+                    text: res?.data?.message,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500,
+                  }).then(() => {
+                    refetch();
+                  });
+                } else {
+                  Swal.fire({
+                    title: "Oops",
+                    text: res?.error?.data?.message,
+                    icon: "error",
+                    timer: 1500,
+                    showConfirmButton: false,
+                  });
+                }
+              });
+            }
+          });
+    }
 
     const columns =[
         {
@@ -93,7 +82,24 @@ const AboutElection = () => {
             dataIndex: "election", 
             key:"election" ,
             render:(election)=> <Link to={election}> <p>{election}</p> </Link>
-        } ,
+        } , 
+         {
+                title:"Action" ,
+                dataIndex:"action" ,
+                key:"action" ,
+                render:(_,record)=>(  <div
+                    className=" flex items-center gap-2 "
+                    >
+                 
+
+                      <button
+                       onClick={()=>{setOpen(true) , setModalData(record)}}
+                      >
+                       <CiEdit className="text-xl font-semibold text-[#5C5C5C]" />
+                      </button>  
+                      <button onClick={()=>handleDelete(record?.id)}> <MdDeleteOutline  size={22}/> </button>   
+                    </div>)
+        }
 
     ]
     return (
@@ -110,11 +116,13 @@ const AboutElection = () => {
             columns={columns}
             dataSource={data}
             pagination={{
-              pageSize: 9   ,
+              total:aboutElection?.pagination?.total, 
+              page:page ,
+              onChange:(page)=>setPage(page)
             }}
           />   
 
-          <AddContentModal open={open} setOpen={setOpen} />  
+          <AddContentModal open={open} setOpen={setOpen} modalData={modalData} refetch={refetch} setModalData={setModalData} />  
 
         </div>
     );

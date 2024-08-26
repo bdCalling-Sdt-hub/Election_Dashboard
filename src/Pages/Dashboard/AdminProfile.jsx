@@ -1,39 +1,110 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Form, Input, Slider, Table } from "antd";
 import Swal from "sweetalert2";
 import { CiEdit } from "react-icons/ci";
+import { useChangePassMutation, useGetProfileQuery, useUpdateProfileMutation } from "../../redux/apiSlices/AuthSlice";
+import { imageUrl } from "../../redux/api/apislice"; 
+import person from "../../assets/person.png"
 
 
 const AdminProfile = () => {
-  const [isEdit, setIsEdit] = useState(false);
+  const [isEdit, setIsEdit] = useState(false); 
+  const {data} = useGetProfileQuery()  
+  const [changePass ,{isError:isErr , isSuccess:isSucc , error:err , data:changepass}]= useChangePassMutation()  
+  const [updateProfile , {isSuccess , isError , error , data:Profile}] = useUpdateProfileMutation()
+  const user = data?.data 
 
-  const [newPassError, setNewPassError] = useState("");
-  const [conPassError, setConPassError] = useState("");
-  const [curPassError, setCurPassError] = useState("");
+  const [imgPick, setImagePick] = useState(null);   
+  const [imgFile , setImgFile] = useState("")
 
-  const [imgPick, setImagePick] = useState(null);
+//  profile update message 
+  useEffect(() => {
+    if (isSuccess) {
+      if (Profile) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: Profile?.message,
+          timer: 1500,
+          showConfirmButton: false
+        }).then(() => {   
+          window.location.reload(); 
+        });
+      }
 
-  const onImageChange = (event) => {
-    if (event.target.files && event.target.files[0]) {
-      setImagePick(URL.createObjectURL(event.target.files[0]));
     }
+    if (isError) {
+      Swal.fire({
+        title: "Failed to Login",
+        text: error?.Profile?.message,  
+        icon: "error",
+      });
+    }
+  }, [isSuccess, isError, error, Profile]);   
+
+//  password update message 
+  useEffect(() => {
+    if (isSucc) {
+      if (changepass) {
+        Swal.fire({
+          position: "center",
+          icon: "success",
+          title: changepass?.message,
+          timer: 1500,
+          showConfirmButton: false
+        }).then(() => {   
+          window.location.reload(); 
+        });
+      }
+
+    }
+    if (isErr) {
+      Swal.fire({
+        // title: "Failed to Login", 
+        text: err?.data?.message,  
+        icon: "error",
+      });
+    }
+  }, [isSucc, isErr, err, changepass]);   
+
+
+
+
+  // update profile  
+  const onFinish =async(values)=>{ 
+    const formData = new FormData()  
+    if(imgFile){
+      formData.append("image",imgFile )
+    } 
+formData.append("name" ,values?.name )
+    await updateProfile(formData).then((res)=>{
+      console.log(res);
+    })
+   
+  } 
+
+
+  const onImageChange = (e) => {  
+    const file = e.target.files[0] 
+    setImgFile(file)
+    setImagePick(URL.createObjectURL(file));
   };
 
-  const handleChangePassword = (values) => {
+
+
+
+
+  const handleChangePassword=async(values)=>{ 
     console.log(values);
-    if (values?.current_password === values.new_password) {
-      setNewPassError("The New password is semilar with old Password");
-    } else {
-      setNewPassError("");
-    }
+await changePass(values).then((res)=>console.log(res))
+  }
 
-    if (values?.new_password !== values.confirm_password) {
-      setConPassError("New Password and Confirm Password Doesn't Matched");
-    } else {
-      setConPassError("");
-    }
-  };
 
+  const src = imgPick
+  ? imgPick
+  : user?.image?.startsWith("https")
+  ? user?.image
+  : `${imageUrl}${user?.image}`; 
 
   return (
     <div className="mt-5">
@@ -72,11 +143,7 @@ const AdminProfile = () => {
               }}
             >
               <img
-                src={
-                  imgPick
-                    ? imgPick
-                    : "https://s3-alpha-sig.figma.com/img/3215/31da/7717f3b88e4b580d3a8d79d74b866964?Expires=1724630400&Key-Pair-Id=APKAQ4GOSFWCVNEHN3O4&Signature=ZcHk7qseAxQaJmxmmrj~fy8y4CukRTmD~Fd-MzCGwSMPYXCUzruiRXPS8GWuptR0l2~DGHxcchaejOYgycmNDuMiZnjPE2ErthBNZYU0kYwml~CFGX22YYO3BYEFrYNknt2MWBIq6UrTjUbv2eN~K~3YNKeLL5FgKtAd1TjwVxuJP4E4DqJZMy8a9HdklrKipwB8WwhnRgIZVBfhopV5mPvatTODxn1LeubH0VwYg~y0m1QY93QjgUjsW6EMY3N9teGltQyZNzGhcRaQNbb-88MTkmHkG~N3l0KbTWb2kWroyygyPOOCcGDCZtzyAO6JggHnoGPzRLHoFEqzo4LIHQ__"
-                }
+                src={src}
                 alt=""
                 style={{
                   height: 114,
@@ -85,8 +152,9 @@ const AdminProfile = () => {
                   objectFit: "cover",
                   boxShadow: "0px 4px 4px rgba(0, 0, 0, 0.35)",
                 }}
-              />
-              <label
+              /> 
+              {
+                isEdit ? <label
                 htmlFor="imageUpload"
                 style={{
                   position: "absolute",
@@ -103,7 +171,9 @@ const AdminProfile = () => {
                 }}
               >
                 <CiEdit size={25} color="#929394" />
-              </label>
+              </label> : ""
+              }
+              
             </div>
             <p
               style={{
@@ -112,7 +182,7 @@ const AdminProfile = () => {
                 color: "#333333",
               }}
             >
-             Mithila 
+            {user?.name}
             </p>
           </div>
           <input
@@ -179,7 +249,10 @@ const AdminProfile = () => {
                 Edit Your Profile
               </p> 
 <div className=" flex items-center justify-center"> 
-  <Form style={{  width:"60%"}} layout="vertical"> 
+  <Form style={{  width:"60%"}} layout="vertical" onFinish={onFinish} initialValues={{
+    name: user?.name ,
+    email: user?.email
+  }} > 
   <div>
                 <div>
                   
@@ -192,7 +265,8 @@ const AdminProfile = () => {
                       fontSize: 14,
                       fontWeight: 400,
                
-                    }}
+                    }} 
+                    // defaultValue={user?.name} 
                   />
                   </Form.Item>
                  
@@ -209,7 +283,9 @@ const AdminProfile = () => {
                       fontSize: 14,
                       fontWeight: 400,
                      
-                    }}
+                    }} 
+                    // defaultValue={user?.email}  
+                    readOnly
                   /> 
                      </Form.Item>
                  
@@ -274,7 +350,7 @@ const AdminProfile = () => {
                   </label>
                   <Form.Item
                     style={{ marginBottom: 0 }}
-                    name="current_password"
+                    name="currentPassword"
                     rules={[
                       {
                         required: true,
@@ -295,14 +371,7 @@ const AdminProfile = () => {
                       }}
                     />
                   </Form.Item>
-                  {curPassError && (
-                    <label
-                      style={{ display: "block", color: "red" }}
-                      htmlFor="error"
-                    >
-                      {curPassError}
-                    </label>
-                  )}
+             
                 </div>
 
                 <div style={{ marginBottom: "20px" }}>
@@ -318,12 +387,21 @@ const AdminProfile = () => {
                     New Password
                   </label>
                   <Form.Item
-                    name="new_password"
+                    name="newPassword"
+                    dependencies={['currentPassword']}
                     rules={[
                       {
-                        required: true,
-                        message: "Please input your new Password!",
+                        required: true, 
+                        message: "Please input your New password!",
                       },
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                          if (!value || getFieldValue('currentPassword') === value) {
+                            return Promise.reject(new Error('The New password is similar to the current Password'));
+                          }
+                          return Promise.resolve();
+                        },
+                      }),
                     ]}
                     style={{ marginBottom: 0 }}
                   >
@@ -340,14 +418,7 @@ const AdminProfile = () => {
                       }}
                     />
                   </Form.Item>
-                  {newPassError && (
-                    <label
-                      style={{ display: "block", color: "red" }}
-                      htmlFor="error"
-                    >
-                      {newPassError}
-                    </label>
-                  )}
+                 
                 </div>
 
                 <div style={{ marginBottom: "40px" }}>
@@ -364,12 +435,21 @@ const AdminProfile = () => {
                   </label>
                   <Form.Item
                     style={{ marginBottom: 0 }}
-                    name="confirm_password"
+                    name="confirmPassword"
+                    dependencies={['newPassword']}
                     rules={[
                       {
-                        required: true,
-                        message: "Please input your Re-type Password!",
+                        required: true, 
+                        message: "Please input your Confirm password!",
                       },
+                      ({ getFieldValue }) => ({
+                        validator(_, value) {
+                          if (!value || getFieldValue('newPassword') === value) {
+                            return Promise.resolve();
+                          }
+                          return Promise.reject(new Error('The new password that you entered do not match!'));
+                        },
+                      }),
                     ]}
                   >
                     <Input.Password
@@ -385,14 +465,7 @@ const AdminProfile = () => {
                       }}
                     />
                   </Form.Item>
-                  {conPassError && (
-                    <label
-                      style={{ display: "block", color: "red" }}
-                      htmlFor="error"
-                    >
-                      {conPassError}
-                    </label>
-                  )}
+              
                 </div>
 
                 <div
@@ -404,7 +477,7 @@ const AdminProfile = () => {
                   }}
                 >
                   <div style={{ width: "100%" }}>
-                    <div
+                    <Form.Item
                       style={{
                         marginTop: 24,
                         display: "flex",
@@ -412,7 +485,8 @@ const AdminProfile = () => {
                         alignItems: "center",
                       }}
                     >
-                      <Button
+                      <Button 
+                      htmlType="submit"
                         style={{
                           height: 44,
                           width: 150,
@@ -425,7 +499,7 @@ const AdminProfile = () => {
                       >
                         Save Changes
                       </Button>
-                    </div>
+                    </Form.Item>
                   </div>
                 </div>
               </Form>

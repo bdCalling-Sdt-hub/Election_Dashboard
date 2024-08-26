@@ -1,24 +1,111 @@
-import { Form, Input, Modal } from 'antd';
-import React, { useState } from 'react';
+import { Button, Form, Input, Modal } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { PiImageThin } from "react-icons/pi";
+import { usePostAboutElectionMutation, useUpdateAboutElectionMutation } from '../redux/apiSlices/DashboardSlice';
+import Swal from 'sweetalert2';
 
 
-const AddContentModal = ({open , setOpen}) => { 
-    const [imgFile, setImgFile] = useState(null);
-    const handleChange = (e) => {
-      setImgFile(e.target.files[0]);
-    };
+const AddContentModal = ({open , setOpen ,setModalData ,refetch ,modalData}) => {   
+  const [updateAboutElection] = useUpdateAboutElectionMutation() 
+  const [postAboutElection] = usePostAboutElectionMutation()
+  console.log(modalData);
+  const [form] = Form.useForm()
+  const [imgFile, setImgFile] = useState(null); 
+  const [imageUrl , setImageUrl] = useState()  
+
+  useEffect(()=>{  
+    if(modalData){
+      form.setFieldsValue({title:modalData?.title , url:modalData?.election}) 
+      setImageUrl(modalData?.Icon)
+    }
+   
+  } ,[modalData]) 
+
+    const handleChange = (e) => { 
+      const file = e.target.files[0]
+      setImgFile(file);
+      setImageUrl(URL.createObjectURL(file))
+    }; 
+
+const onFinish =async(values)=>{
+  console.log(values);  
+  const formData = new FormData() 
+  if(imgFile){
+    formData.append("image" ,imgFile)
+  } 
+const {images , ...otherValues} = values 
+
+Object.entries(otherValues).forEach(([field , value])=>{
+  formData.append(field , value)
+}) 
+
+const id = modalData?.id
+
+if(modalData?.id){
+  await updateAboutElection({id , formData}).then((res)=>{
+    if(res?.data?.success){
+      Swal.fire({
+          text:res?.data?.message,
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          refetch(); 
+          setOpen(false);
+          setModalData(null)  
+          setImageUrl(null)
+          form.resetFields() 
+        })
+  }else{
+      Swal.fire({
+          title: "Oops",
+          text: res?.error?.data?.message,
+          icon: "error",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+    
+  }
+  })
+}else{
+  await postAboutElection(formData).then((res)=>{
+    if(res?.data?.success){
+      Swal.fire({
+          text:res?.data?.message,
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          refetch(); 
+          setOpen(false);
+        })
+  }else{
+      Swal.fire({
+          title: "Oops",
+          text: res?.error?.data?.message,
+          icon: "error",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+    
+  } 
+  })
+}
+}
+
     return (
         <div>
-        <Modal
+        <Modal 
+ 
 open={open}
-onCancel={() => {setOpen(false)  , setImgFile(null);}}                   
+onCancel={() => {setOpen(false)  , setImgFile(null)  , setModalData(null), form.resetFields()}}                   
 centered
 footer={false}          
 width={500}
 >  
-<div className=' p-5'>
-<Form>
+<div className=' p-5'> 
+<p className=' pb-3 text-lg font-[500]'> {modalData ? "Update About Election" : "Add About Election"}</p>
+<Form onFinish={onFinish} form={form}>
 <div>
 <p className="text-[#6D6D6D] py-1">Title:</p>
 <Form.Item
@@ -44,14 +131,23 @@ width={500}
   style={{ display: "block", margin: "4px 0" }}
   className="p-3 border rounded-lg"
 >
-  <Form.Item name="image">
+  <Form.Item name="images" 
+  // rules={[
+  //                       {
+  //                           required: true,
+  //                           validator: () => {
+  //                               if (!imageUrl || !imgFile) {
+  //                                 return Promise.reject("Please select a Image");
+  //                               }
+  //                               return Promise.resolve();
+  //                           }
+  //                       }
+  //                   ]} 
+                    >
     <div className="flex justify-center items-center w-full h-full   py-4">
-      {imgFile ? (
-        <img src={URL.createObjectURL(imgFile)} alt="" />
-      ) 
-      //  : itemForEdit?.category_image ? (
-      //   <img src={`${ServerUrl}${itemForEdit?.category_image}`} alt="" />
-      // ) 
+      {imageUrl ? (
+        <img src={imageUrl} alt="" />
+      )  
        : (
         <PiImageThin className="text-8xl flex items-center justify-center text-[#666666] font-[400]" />
       )}
@@ -96,11 +192,11 @@ width={500}
 
 
 
-<div className="text-center mt-6">
-<button className="bg-[#07254A] px-6 py-3 w-full text-[#FEFEFE] rounded-md">
+<Form.Item className="text-center mt-6">
+<Button htmlType='submit' className="bg-[#07254A] px-6 py-3 w-full text-[#FEFEFE] rounded-md" style={{height:"45px"}}>
   Confirm
-</button>
-</div>
+</Button>
+</Form.Item>
 </Form>
 </div>
 

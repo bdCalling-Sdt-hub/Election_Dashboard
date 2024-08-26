@@ -2,11 +2,19 @@ import React, { useState, useRef, useMemo, useEffect } from "react";
 import JoditEditor from "jodit-react";
 import Swal from "sweetalert2";
 import Title from "../../Shared/Title";
+import { useGetTermsQuery, useUpdateTermsMutation } from "../../redux/apiSlices/DashboardSlice";
 
 const Terms = () => {
   const editor = useRef(null);
   const [content, setContent] = useState("");
-  const [isLoading, seLoading] = useState(false);
+  const [isLoading, seLoading] = useState(false); 
+  const {data:terms , refetch} = useGetTermsQuery()  
+  const [updateTerms] = useUpdateTermsMutation()
+  console.log(terms); 
+
+  useEffect(()=>{ 
+    setContent(terms?.data?.content)
+  } ,[terms?.data?.content])
 
   const config = {
     readonly: false,
@@ -14,7 +22,32 @@ const Terms = () => {
     style: {
       height: 400,
     },
-  };
+  }; 
+
+  const handleSubmit=async()=>{
+    await updateTerms({content:content}).then((res)=>{
+      if(res?.data?.success){
+        Swal.fire({
+            text:res?.data?.message,
+            icon: "success",
+            showConfirmButton: false,
+            timer: 1500,
+          }).then(() => {
+            refetch(); 
+            
+          })
+    }else{
+        Swal.fire({
+            title: "Oops",
+            text: res?.error?.data?.message,
+            icon: "error",
+            timer: 1500,
+            showConfirmButton: false,
+          });
+      
+    }
+    })
+  }
   return (
     <>
 
@@ -39,7 +72,7 @@ const Terms = () => {
           alignItems: "center",
         }}
       >
-        <button
+        <button onClick={()=>handleSubmit()}
           style={{
             height: 44,
             width: "20%",

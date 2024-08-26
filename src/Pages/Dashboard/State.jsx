@@ -1,98 +1,67 @@
 import React, { useState } from 'react';
 import Title from '../../Shared/Title';
-import { Button, Form, Input, Modal, Table } from 'antd';
+import {  Input, Table } from 'antd';
 import { IoSearchOutline } from 'react-icons/io5';
 import { CiEdit } from 'react-icons/ci'; 
 import { MdDeleteOutline } from "react-icons/md";
-
-const data=[
-    {
-        key:1 ,
-        state:"Bangladesh"
-    } ,
-    {
-        key:2 ,
-        state:"India"
-    } ,
-    {
-        key:3 ,
-        state:"Pakistan"
-    } ,
-    {
-        key:4 ,
-        state:"Korea"
-    } ,
-    {
-        key:5 ,
-        state:"Japan"
-    } ,
-    {
-        key:6 ,
-        state:"Bangladesh"
-    } ,
-    {
-        key:7 ,
-        state:"California"
-    } ,
-    {
-        key:8 ,
-        state:"Boston"
-    } ,
-    {
-        key:9 ,
-        state:"Iowa"
-    } ,
-    {
-        key:10 ,
-        state:"India"
-    } , 
-    {
-        key:11 ,
-        state:"Bangladesh"
-    } ,
-    {
-        key:12 ,
-        state:"India"
-    } ,
-    {
-        key:13 ,
-        state:"Pakistan"
-    } ,
-    {
-        key:14 ,
-        state:"Korea"
-    } ,
-    {
-        key:15 ,
-        state:"Japan"
-    } ,
-    {
-        key:16 ,
-        state:"Bangladesh"
-    } ,
-    {
-        key:17 ,
-        state:"California"
-    } ,
-    {
-        key:18 ,
-        state:"Boston"
-    } ,
-    {
-        key:19 ,
-        state:"Iowa"
-    } ,
-    {
-        key:20 ,
-        state:"India"
-    } ,
+import { useDeleteStateMutation, useGetStateQuery } from '../../redux/apiSlices/DashboardSlice';
+import StateModal from '../../Components/StateModal';
+import Swal from 'sweetalert2';
 
 
-]
 
 const State = () => { 
     const [open , setOpen] = useState(false)  
-    const [modalData , SetModalData] = useState(null)
+    const [modalData , SetModalData] = useState(null) 
+    const {data:states , refetch} = useGetStateQuery()   
+    const [page ,setPage]=useState(1)
+    const [deleteState] = useDeleteStateMutation() 
+  
+    console.log(states); 
+
+    const data = states?.data?.map((value , index)=>({
+         key:index+1 , 
+         id: value?._id ,
+        state:value?.name
+    })) 
+
+    const handleDelete=async(id)=>{
+        Swal.fire({
+            title: "Are you sure?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
+          }).then(async (result) => {
+            if (result.isConfirmed) {
+              await deleteState(id).then((res) => {
+                if (res?.data?.success) {
+                  Swal.fire({
+                    text: res?.data?.message,
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500,
+                  }).then(() => {
+                    refetch();
+                  });
+                } else {
+                  Swal.fire({
+                    title: "Oops",
+                    text: res?.error?.data?.message,
+                    icon: "error",
+                    timer: 1500,
+                    showConfirmButton: false,
+                  });
+                }
+              });
+            }
+          });
+    }
+
+
+
     const columns =[
         {
             title: "S.No",
@@ -112,11 +81,11 @@ const State = () => {
             className=" flex items-center gap-2 "
             >
               <button
-               onClick={()=>{setOpen(true) , SetModalData(record?.key)}}
+               onClick={()=>{setOpen(true) , SetModalData(record)}}
               >
                <CiEdit className="text-xl font-semibold text-[#5C5C5C]" />
               </button>  
-              <button> <MdDeleteOutline  size={22}/> </button>  
+              <button onClick={()=>handleDelete(record?.id)}> <MdDeleteOutline  size={22}/> </button>  
             </div>
         } ,
     ]
@@ -126,7 +95,7 @@ const State = () => {
                        <div className=" flex  items-center justify-between mb-5">
       <Title className="">Add State</Title> 
       <div className=" flex items-center gap-5 ">
-      <Input  placeholder="Search Something...." prefix={<IoSearchOutline className="text-2xl text-[#07254A]" />} style={{ width:"400px" , height:"45px"}} />  
+     
       <button className=" flex gap-1 text-white bg-[#07254A]  h-[45px] rounded-lg  px-4 justify-center items-center"  onClick={()=>{setOpen(true)}}> 
         <span className=" font-[400] text-[20px]"> + </span> 
         <span className=" font-[450]"> Add State </span>
@@ -139,48 +108,13 @@ const State = () => {
             columns={columns}
             dataSource={data}
             pagination={{
-              pageSize: 13   ,
+              total:states?.pagination?.total, 
+             page:page ,
+             onChange:(page)=>setPage(page)
             }}
           />   
 
-          <Modal  
-           open={open}
-        onCancel={() => setOpen(false)}                   
-        centered
-        footer={false}          
-        width={500} > 
-  <Form layout='vertical' className=' p-8 pb-2'>  
-    <p className=' pb-3 text-lg font-[500]'> {modalData ? "Update State" : "Add State"}</p>
-              <Form.Item
-                name="name"
-                rules={[
-                  {
-                    required: true,
-                    message: "Please input State Name",
-                  },
-                ]} 
-                label={<p className="text-[#6D6D6D] ">State Name</p>}
-                
-              >
-                <Input
-                  className="w-[100%] border outline-none px-3 py-[10px]"
-                  type="text"
-                />
-              </Form.Item>  
-
-              <Form.Item className=' text-center'> 
-              <Button htmlType='submit' style={{
-                backgroundColor:"#07254A" ,
-                color:"#FEFEFE", 
-                borderRadius:"12px" ,
-                width:"50%" ,
-                height:"45px"
-              }}>
-                Confirm
-              </Button>
-              </Form.Item>
-              </Form>
-          </Modal>
+       <StateModal open={open} setOpen={setOpen}  modalData={modalData}  SetModalData={SetModalData} refetch={refetch}/>
 
         </div>
     );

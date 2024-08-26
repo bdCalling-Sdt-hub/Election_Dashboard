@@ -4,121 +4,22 @@ import { IoSearchOutline } from "react-icons/io5";
 import Title from "../../Shared/Title"
 import VoterIssuesModal from "../../Components/VoterIssuesModal";
 import { FaRegEye } from "react-icons/fa";
-const data = [
-  {
-    key: "1",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  {
-    key: "2",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  {
-    key: "3",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  {
-    key: "4",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  {
-    key: "5",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  {
-    key: "6",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  {
-    key: "7",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  {
-    key: "1",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  {
-    key: "8",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  {
-    key: "9",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  {
-    key: "10",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  {
-    key: "11",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  
-  {
-    key: "11",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  
-  {
-    key: "12",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  
-  {
-    key: "13",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  
-  {
-    key: "14",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  
-  {
-    key: "15",
-    state:"California" , 
-    dob : "9 Dec 2024",
-    issues: ["On  Climate Change" , "On the Israel - Palestine  Conflict" , "On Reproductive Rights"] ,   
-  },
-  
- 
-];
+import { useGetVoterIssuesQuery } from "../../redux/apiSlices/DashboardSlice";
+import moment from "moment";
 
 const VoterIssues = () => {
 const [open,setOpen]=useState(false) 
-const [modalData , SetModalData] = useState(null)
+const [modalData , SetModalData] = useState(null)   
+const [page , setPage] = useState(1)
+const {data:voterIssues} = useGetVoterIssuesQuery() 
+console.log(voterIssues); 
+
+const data = voterIssues?.data?.map((value, index)=>({
+  key: index+1,
+  state:value?.state , 
+  dob : moment(value?.dateOfBirth).format('D MMM  YYYY'),
+  issues: value?.issues , 
+}))
 
   const columns = [
     {
@@ -172,7 +73,7 @@ const [modalData , SetModalData] = useState(null)
     <div>  
       <div className=" flex  items-center justify-between mb-5"> 
       <Title className="">Voters important issues</Title>
-      <Input  placeholder="Search Something...." prefix={<IoSearchOutline className="text-2xl text-[#07254A]" />} style={{ width:"400px" , height:"45px"}} />  
+   
       </div>
      
       <div
@@ -187,8 +88,11 @@ const [modalData , SetModalData] = useState(null)
           <Table
             columns={columns}
             dataSource={data}
-            pagination={{
-              pageSize: 12,
+            pagination={{ 
+              total:voterIssues?.pagination?.total , 
+              page:page ,
+              onChange:(page)=>setPage(page)
+             
             }}
           />
         </div>

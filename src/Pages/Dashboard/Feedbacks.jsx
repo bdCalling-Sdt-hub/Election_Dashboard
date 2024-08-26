@@ -3,75 +3,21 @@ import {  Table } from "antd";
 import Title from "../../Shared/Title"
 import { FaRegEye } from "react-icons/fa";
 import FeedbackModal from "../../Components/FeedbackModal";
-const data = [
-  {
-    key: "1",
-    feedback: "sed nec Nullam dignissim, faucibus Donec dui. turpis vel elit. ullamcorper ex hendrerit tortor. lacus quis tincidunt consectetur turpis Praesent vitae lorem. ",
-  },
- 
-  {
-    key: "2",
-    feedback: "sed nec Nullam dignissim, faucibus Donec dui. turpis vel elit. ullamcorper ex hendrerit tortor. lacus quis tincidunt consectetur turpis Praesent vitae lorem. ",
-  },
- 
-  {
-    key: "3",
-    feedback: "sed nec Nullam dignissim, faucibus Donec dui. turpis vel elit. ullamcorper ex hendrerit tortor. lacus quis tincidunt consectetur turpis Praesent vitae lorem. ",
-  },
- 
-  {
-    key: "4",
-    feedback: "sed nec Nullam dignissim, faucibus Donec dui. turpis vel elit. ullamcorper ex hendrerit tortor. lacus quis tincidunt consectetur turpis Praesent vitae lorem. ",
-  },
- 
-  {
-    key: "5",
-    feedback: "sed nec Nullam dignissim, faucibus Donec dui. turpis vel elit. ullamcorper ex hendrerit tortor. lacus quis tincidunt consectetur turpis Praesent vitae lorem. ",
-  },
- 
-  {
-    key: "6",
-    feedback: "sed nec Nullam dignissim, faucibus Donec dui. turpis vel elit. ullamcorper ex hendrerit tortor. lacus quis tincidunt consectetur turpis Praesent vitae lorem. ",
-  },
- 
-  {
-    key: "7",
-    feedback: "sed nec Nullam dignissim, faucibus Donec dui. turpis vel elit. ullamcorper ex hendrerit tortor. lacus quis tincidunt consectetur turpis Praesent vitae lorem. ",
-  },
- 
-  {
-    key: "8",
-    feedback: "sed nec Nullam dignissim, faucibus Donec dui. turpis vel elit. ullamcorper ex hendrerit tortor. lacus quis tincidunt consectetur turpis Praesent vitae lorem. ",
-  },
- 
-  {
-    key: "9",
-    feedback: "sed nec Nullam dignissim, faucibus Donec dui. turpis vel elit. ullamcorper ex hendrerit tortor. lacus quis tincidunt consectetur turpis Praesent vitae lorem. ",
-  },
- 
-  {
-    key: "10",
-    feedback: "sed nec Nullam dignissim, faucibus Donec dui. turpis vel elit. ullamcorper ex hendrerit tortor. lacus quis tincidunt consectetur turpis Praesent vitae lorem. ",
-  },
-  {
-    key: "11",
-    feedback: "sed nec Nullam dignissim, faucibus Donec dui. turpis vel elit. ullamcorper ex hendrerit tortor. lacus quis tincidunt consectetur turpis Praesent vitae lorem. ",
-  },
-  {
-    key: "12",
-    feedback: "sed nec Nullam dignissim, faucibus Donec dui. turpis vel elit. ullamcorper ex hendrerit tortor. lacus quis tincidunt consectetur turpis Praesent vitae lorem. ",
-  },
-  {
-    key: "13",
-    feedback: "sed nec Nullam dignissim, faucibus Donec dui. turpis vel elit. ullamcorper ex hendrerit tortor. lacus quis tincidunt consectetur turpis Praesent vitae lorem. ",
-  },
- 
-];
+import { useGetFeedbackQuery } from "../../redux/apiSlices/DashboardSlice";
+
 
 const Feedbacks = () => { 
     const [open,setOpen]=useState(false) 
-    const [modalData , SetModalData] = useState(null)
+    const [modalData , SetModalData] = useState(null)  
+    const [page ,setPage]=useState(1)
+    const {data:feedbacks} = useGetFeedbackQuery()  
+    console.log(feedbacks);
     
+const data = feedbacks?.data?.map((value , index)=>({
+  key: index+1,
+  feedback:value?.content
+}))
+
       const columns = [
         {
           title: "S.No",
@@ -114,7 +60,9 @@ const Feedbacks = () => {
             columns={columns}
             dataSource={data}
             pagination={{
-              pageSize: 9   ,
+             total:feedbacks?.pagination?.total, 
+             page:page ,
+             onChange:(page)=>setPage(page)
             }}
           /> 
 

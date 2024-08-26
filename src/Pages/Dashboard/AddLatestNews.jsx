@@ -1,28 +1,125 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Title from '../../Shared/Title'; 
 import JoditEditor from "jodit-react";
-import { Form, Input } from 'antd';
+import { Button, Form, Input } from 'antd';
 import { PiImageThin } from 'react-icons/pi';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { useCreateNewsMutation, useGetNewsQuery, useUpdateNewsMutation } from '../../redux/apiSlices/DashboardSlice';
+import Swal from 'sweetalert2';
 
-const AddLatestNews = () => { 
-    const [imgFile, setImgFile] = useState(null);
-    const handleChange = (e) => {
-      setImgFile(e.target.files[0]);
+const AddLatestNews = () => {  
+
+    const [imgFile, setImgFile] = useState(null);  
+    const [imgUrl , setImgUrl] =useState()  
+    const [updateNews] = useUpdateNewsMutation() 
+    const [createNews] = useCreateNewsMutation()
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const value = queryParams.get('value');
+    const newsValue = value ? JSON.parse(decodeURIComponent(value)) : null; 
+    const navigate = useNavigate() 
+    const {data:news ,refetch} = useGetNewsQuery() 
+    console.log(newsValue); 
+    const [form] = Form.useForm() 
+
+    const handleChange = (e) => { 
+      const file = e.target.files[0]
+      setImgFile(file); 
+      setImgUrl(URL.createObjectURL(file))
     }; 
     const editor = useRef(null);
-    const [content, setContent] = useState("");
-  
+    const [content, setContent] = useState(""); 
+
+    useEffect(()=>{ 
+      if(newsValue){
+        form.setFieldsValue({name:newsValue?.title}) 
+        setContent(newsValue?.description) 
+        setImgUrl(newsValue?.image)
+      }
+    } ,[])
+
+// useEffect(()=>{ 
+//   setContent()
+// },[])
+
     const config = {
       readonly: false,
       placeholder: "Start typings...",
       style: {
         height: 400,
       },
-    };  
+    };   
+
+const handleSubmit =async(values)=>{ 
+  console.log(values); 
+  
+ const formData = new FormData()  
+ if(imgFile){
+  formData.append("image",imgFile)
+ } 
+ formData.append("title",values?.name) 
+ formData.append("description",content)  
+ Object.entries(formData).forEach(([field , value])=>{
+  console.log(`${field} ${value}`);
+ })
+const id = newsValue?.id
+ if(newsValue){
+await updateNews({id,formData}).then((res)=>{
+  if(res?.data?.success){
+    Swal.fire({
+        text:res?.data?.message,
+        icon: "success",
+        showConfirmButton: false,
+        timer: 1500,
+      }).then(() => {
+        refetch(); 
+        navigate("/latest-news")
+
+        form.resetFields() 
+      })
+}else{
+    Swal.fire({
+        title: "Oops",
+        text: res?.error?.data?.message,
+        icon: "error",
+        timer: 1500,
+        showConfirmButton: false,
+      });
+  
+}
+})
+ }else{
+  await createNews(formData).then((res)=>{
+    if(res?.data?.success){
+      Swal.fire({
+          text:res?.data?.message,
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1500,
+        }).then(() => {
+          refetch(); 
+          navigate("/latest-news")
+        })
+  }else{
+      Swal.fire({
+          title: "Oops",
+          text: res?.error?.data?.message,
+          icon: "error",
+          timer: 1500,
+          showConfirmButton: false,
+        });
+    
+  } 
+  }) 
+ }
+
+
+}
+
     return (
         <div>
-            <Title className="">Add latest news</Title>  
-            <Form className='w-2/3 my-4 ' layout='vertical'>  
+            <Title className="">{newsValue?.id ? "Update latest news" : "Add latest news"}</Title>  
+            <Form className='w-2/3 my-4 ' onFinish={handleSubmit} layout='vertical' form={form}>  
                 <Form.Item name="name" label={<p className='text-[#6D6D6D] '>Name:</p>}> 
                 <Input style={{ height:"45px"}} />
                 </Form.Item>  
@@ -34,10 +131,10 @@ const AddLatestNews = () => {
                 className="p-3 border rounded-lg"
               > 
               
-                <Form.Item name="image" >
+                <Form.Item name="images" >
                   <div className="flex justify-center items-center w-full h-full   py-4">
-                    {imgFile ? (
-                      <img src={URL.createObjectURL(imgFile)} alt="" />
+                    {imgUrl ? (
+                      <img src={imgUrl} alt="" />
                     ) 
                      : (
                       <PiImageThin className="text-7xl flex items-center justify-center text-[#666666] font-[400]" />
@@ -62,7 +159,7 @@ const AddLatestNews = () => {
               </label>
                 </div>
           
-            </Form> 
+          
 
             <div> 
             <p className="text-[#6D6D6D] py-1">Details:</p> 
@@ -75,7 +172,7 @@ const AddLatestNews = () => {
           onChange={(newContent) => {}}
         />
       </div>
-      <div
+      <Form.Item
         style={{
           marginTop: 24,
           display: "flex",
@@ -83,10 +180,10 @@ const AddLatestNews = () => {
           alignItems: "center",
         }}
       >
-        <button
+        <Button htmlType='submit'
           style={{
-            height: 44,
-            width: "20%",
+            height: "44px",
+            width: "100%",
             backgroundColor: "#07254A",
             color: "white",
             borderRadius: "8px",
@@ -95,8 +192,10 @@ const AddLatestNews = () => {
           }}
         >
           Save Changes
-        </button>
-      </div>
+        </Button> 
+        
+      </Form.Item> 
+      </Form> 
         </div>
     );
 };
