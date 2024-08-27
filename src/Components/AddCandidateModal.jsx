@@ -52,7 +52,8 @@ await updateCandidate({id, formdata }).then(res=>{
       }).then(() => {
         refetch();  
         setModalData(null)  
-        setImageUrl(null)
+        setImageUrl(null) 
+        setImgFile(null)
         form.resetFields() 
         setOpen(false);
       })
@@ -77,7 +78,10 @@ await updateCandidate({id, formdata }).then(res=>{
                 showConfirmButton: false,
                 timer: 1500,
               }).then(() => {
-                refetch(); 
+                refetch();  
+                setImageUrl(null) 
+                setImgFile(null)
+                form.resetFields() 
                 setOpen(false);
               })
         }else{
@@ -143,9 +147,9 @@ await updateCandidate({id, formdata }).then(res=>{
                 //         }
                 //     ]}  
                     >
-                  <div className="flex justify-center items-center w-full h-full ">
+                  <div className="flex justify-center items-center w-full h-[200px] ">
                     {imageUrl ? (
-                      <img src={imageUrl} alt="" />
+                      <img src={imageUrl} style={{ height:"200px"}} alt="" />
                     ) 
                     //  : itemForEdit?.category_image ? (
                     //   <img src={`${ServerUrl}${itemForEdit?.category_image}`} alt="" />

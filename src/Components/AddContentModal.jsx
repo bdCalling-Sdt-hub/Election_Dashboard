@@ -52,7 +52,8 @@ if(modalData?.id){
         }).then(() => {
           refetch(); 
           setOpen(false);
-          setModalData(null)  
+          setModalData(null)   
+          setImgFile(null)
           setImageUrl(null)
           form.resetFields() 
         })
@@ -77,7 +78,11 @@ if(modalData?.id){
           timer: 1500,
         }).then(() => {
           refetch(); 
-          setOpen(false);
+          setOpen(false); 
+          setModalData(null)   
+          setImgFile(null)
+          setImageUrl(null)
+          form.resetFields() 
         })
   }else{
       Swal.fire({
@@ -98,7 +103,7 @@ if(modalData?.id){
         <Modal 
  
 open={open}
-onCancel={() => {setOpen(false)  , setImgFile(null)  , setModalData(null), form.resetFields()}}                   
+onCancel={() => {setOpen(false)  , setImgFile(null)  ,  setImageUrl(null) , setModalData(null), form.resetFields()}}                   
 centered
 footer={false}          
 width={500}
@@ -144,9 +149,9 @@ width={500}
   //                       }
   //                   ]} 
                     >
-    <div className="flex justify-center items-center w-full h-full   py-4">
+    <div className="flex justify-center items-center w-full h-[120px]   py-2">
       {imageUrl ? (
-        <img src={imageUrl} alt="" />
+        <img src={imageUrl} style={{height:"120px"}} alt="" />
       )  
        : (
         <PiImageThin className="text-8xl flex items-center justify-center text-[#666666] font-[400]" />

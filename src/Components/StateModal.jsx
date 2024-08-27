@@ -57,7 +57,9 @@ await updateState(data).then((res)=>{
                     timer: 1500,
                   }).then(() => {
                     refetch(); 
-                    setOpen(false);
+                    setOpen(false); 
+                    SetModalData(null)
+                    form.resetFields() 
                   })
             }else{
                 Swal.fire({

@@ -60,8 +60,10 @@ await updateFaq(data).then((res)=>{
           showConfirmButton: false,
           timer: 1500,
         }).then(() => {
-          refetch(); 
-          setOpenAddModel(false);
+          refetch();  
+          setOpenAddModel(false); 
+          setModalData(null)  
+          form.resetFields() 
         })
   }else{
       Swal.fire({

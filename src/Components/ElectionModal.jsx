@@ -57,7 +57,9 @@ await updateElection(data).then((res)=>{
                   }).then(() => {
                     refetch();  
                    
-                    setOpen(false);
+                    setOpen(false); 
+                    SetModalData(null)
+                    form.resetFields() 
                   })
             }else{
                 Swal.fire({
