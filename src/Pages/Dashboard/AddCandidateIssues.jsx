@@ -10,22 +10,24 @@ const { Option } = Select;
 const AddCandidateIssues = () => { 
   
     const [candidateInfo , setCandidateInfo]=useState(null) 
-    console.log(candidateInfo);
-    const {data:candidate , refetch} = useGetCandidateQuery()   
-    const [candidateIssues] = useCandidateIssuesMutation()
+
+    const {data:candidate , refetch} = useGetCandidateQuery()    
     console.log(candidate);
+    const [candidateIssues] = useCandidateIssuesMutation()
+
     const location = useLocation(); 
     const navigate = useNavigate()
     const queryParams = new URLSearchParams(location.search);
     const value = queryParams.get('value');
-    const newsValue = value ? JSON.parse(decodeURIComponent(value)) : null;  
-    console.log(newsValue); 
+    const newsValue = value ? JSON.parse(decodeURIComponent(value)) : null;   
+    console.log(newsValue);
+
     const [issues, setIssues] = useState([
       { question: '', answer: '' },
       { question: '', answer: '' },
       { question: '', answer: '' }
     ]); 
-    console.log(issues); 
+
 
     useEffect(()=>{ 
       if(newsValue){
@@ -54,7 +56,7 @@ const AddCandidateIssues = () => {
     } 
 
     const onFinish=async(values)=>{ 
-      const id =candidateInfo?._id 
+      const id = newsValue?.id || candidateInfo?._id 
       const value ={
         issues:issues
       }
@@ -66,8 +68,9 @@ const AddCandidateIssues = () => {
             showConfirmButton: false,
             timer: 1500,
           }).then(() => {
+            navigate("/candidate-details")  
+            window.location.reload()
             refetch(); 
-            navigate("/candidate-details")
           })
     }else{
         Swal.fire({
@@ -98,14 +101,14 @@ const AddCandidateIssues = () => {
             <p className="text-[#6D6D6D] py-1 text-lg">Select Candidate </p> 
             <Form.Item
         name="candidate"
-        rules={[
-          {
-            required: true,
-            message: 'Please select Candidate!',
-          },
-        ]}
+        // rules={[
+        //   {
+        //     required: true,
+        //     message: 'Please select Candidate!',
+        //   },
+        // ]}
       >
-        <Select placeholder="Select your Candidate" style={{height:"45px" , width:"75%"}} onChange={handleSelectChange} defaultValue={newsValue? newsValue?.candidate?.name : null} > 
+        <Select placeholder="Select your Candidate" disabled={newsValue?.id} style={{height:"45px" , width:"75%"}} onChange={handleSelectChange} defaultValue={newsValue? newsValue?.candidate?.name : null} > 
           {
             candidate?.data?.map((value , index)=><Option  key={index} value={value?._id} >{value?.name}</Option>)
           }
@@ -128,7 +131,7 @@ const AddCandidateIssues = () => {
               <JoditEditor
                 ref={(el) => (editorRefs.current[index] = el)}
                 value={issues[index].answer}
-                config={{ readonly: false }}
+                // config={{ readonly: false }}
                 tabIndex={1}
                 onBlur={(newContent) => handleEditorChange(index, newContent)}
                 onChange={() => {}}

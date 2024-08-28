@@ -1,4 +1,4 @@
-import React, {  useState } from "react";
+import React, {  useEffect, useState } from "react";
 import { Input,  Table } from "antd";  
 import { IoSearchOutline } from "react-icons/io5";
 import Title from "../../Shared/Title"
@@ -11,8 +11,10 @@ const VoterIssues = () => {
 const [open,setOpen]=useState(false) 
 const [modalData , SetModalData] = useState(null)   
 const [page , setPage] = useState(1)
-const {data:voterIssues} = useGetVoterIssuesQuery() 
+const {data:voterIssues ,refetch} = useGetVoterIssuesQuery() 
 console.log(voterIssues); 
+
+
 
 const data = voterIssues?.data?.map((value, index)=>({
   key: index+1,
