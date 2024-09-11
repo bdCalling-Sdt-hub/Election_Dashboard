@@ -13,8 +13,8 @@ import Swal from 'sweetalert2';
 const AboutElection = () => { 
     const [open , setOpen] = useState(false)   
     const [modalData , setModalData] = useState(null)
-    const {data:aboutElection , refetch} = useGetAboutElectionQuery()   
     const [page ,setPage]=useState(1)
+    const {data:aboutElection , refetch} = useGetAboutElectionQuery()   
     const [deleteAboutElection] = useDeleteAboutElectionMutation()
     console.log(aboutElection); 
     const data = aboutElection?.data?.map((value , index)=>({
@@ -64,7 +64,8 @@ const AboutElection = () => {
         {
             title: "S.No",
             dataIndex: "key", 
-            key: "key",
+            key: "key", 
+            render:(_,record,index)=> <p>{((page-1)*10)+ record?.key}</p>
         } ,
         {
             title: "Title",
@@ -115,7 +116,8 @@ const AboutElection = () => {
              <Table
             columns={columns}
             dataSource={data}
-            pagination={{
+            pagination={{ 
+              current: parseInt(page), 
               total:aboutElection?.pagination?.total, 
               page:page ,
               onChange:(page)=>setPage(page)
