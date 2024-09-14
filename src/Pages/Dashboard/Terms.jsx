@@ -10,7 +10,7 @@ const Terms = () => {
   const [isLoading, seLoading] = useState(false); 
   const {data:terms , refetch} = useGetTermsQuery()  
   const [updateTerms] = useUpdateTermsMutation()
-  console.log(terms); 
+  //console.log(terms); 
 
   useEffect(()=>{ 
     setContent(terms?.data?.content)

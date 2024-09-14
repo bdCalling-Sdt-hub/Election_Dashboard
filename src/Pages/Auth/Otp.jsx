@@ -9,17 +9,17 @@ import { setToLocalStorage } from "../../Util/local-stroage";
 
 const Otp = () => { 
   const [sendOtp , {isError ,isSuccess , data ,error}] = useSendOtpMutation()  
-  console.log(data);
+  //console.log(data);
   const [forgetPass] = useForgetPassMutation()
   const navigate = useNavigate();
   const [otp, setOtp] = useState(null); 
 
   const email = JSON.parse(localStorage.getItem("email")); 
-  console.log(email); 
+  //console.log(email); 
 
   useEffect(() => {
     if (isSuccess) {
-      // console.log("you login successfully");
+      // //console.log("you login successfully");
       if (data) {
         Swal.fire({
           position: "center",
@@ -52,8 +52,8 @@ const Otp = () => {
       oneTimeCode:otp ,
       email:email
     }  
-    console.log(data);
-    await sendOtp(data).then((res)=>console.log(res))
+    //console.log(data);
+    await sendOtp(data)
 
 
     // Swal.fire({

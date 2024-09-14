@@ -19,7 +19,7 @@ const AddLatestNews = () => {
     const newsValue = value ? JSON.parse(decodeURIComponent(value)) : null; 
     const navigate = useNavigate() 
     const {data:news ,refetch} = useGetNewsQuery() 
-    console.log(newsValue); 
+    //console.log(newsValue); 
     const [form] = Form.useForm() 
 
     const handleChange = (e) => { 
@@ -51,7 +51,7 @@ const AddLatestNews = () => {
     };   
 
 const handleSubmit =async(values)=>{ 
-  console.log(values); 
+  //console.log(values); 
   
  const formData = new FormData()  
  if(imgFile){
@@ -60,7 +60,7 @@ const handleSubmit =async(values)=>{
  formData.append("title",values?.name) 
  formData.append("description",content)  
  Object.entries(formData).forEach(([field , value])=>{
-  console.log(`${field} ${value}`);
+  //console.log(`${field} ${value}`);
  })
 const id = newsValue?.id
  if(newsValue){

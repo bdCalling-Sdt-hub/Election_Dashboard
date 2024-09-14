@@ -5,13 +5,25 @@ const dashboardSlices = api.injectEndpoints({
 
     // subscriber  
     subscriber:builder.query({ 
-        query:(email)=>`/subscribe?email=${email}`
+        query:(page)=>{ 
+          const params= new URLSearchParams() 
+          if(page)params.append("page" ,page)
+          return{
+ url:`/subscribe?${params.toString()}`
+          }
+        }
     }),  
 
 
     // state  
     getState:builder.query({
-      query:()=>"/state"
+      query:(page)=>{ 
+        const params= new URLSearchParams() 
+        if(page)params.append("page" ,page)
+        return{
+ url:`/state?${params.toString()}`
+        }
+      }
     }) ,
     // add state  
     addState:builder.mutation({
@@ -24,7 +36,7 @@ query:(value)=>({
     // update state  
     updateState:builder.mutation({ 
       query:(value)=>{ 
-        console.log("state" , value);
+        //console.log("state" , value);
         return{
           url:`/state/${value?.id}` ,
           method:"PATCH" , 
@@ -44,7 +56,13 @@ query:(value)=>({
 
     // election  
     getElection:builder.query({
-      query:()=>"/election"
+      query:(page)=>{ 
+        const params= new URLSearchParams() 
+        if(page)params.append("page" ,page)
+        return{
+ url:`/election?${params.toString()}`
+        }
+      }
     }) , 
 
     // add election  
@@ -59,7 +77,7 @@ query:(value)=>({
     // update election  
     updateElection:builder.mutation({ 
       query:(value)=>{ 
-        console.log("election" , value);
+        //console.log("election" , value);
         return{
           url:`/election/${value?.id}` ,
           method:"PATCH" , 
@@ -78,19 +96,20 @@ query:(value)=>({
 
   // Add candidate  page
   getCandidate:builder.query({
-    query:(value)=>{ 
+    query:({page , search})=>{ 
       const params = new URLSearchParams()  
-      if(value)params.append("searchTerm" , value)
+      if(search)params.append("searchTerm" , search)
+      if(page)params.append("page" , page)
       return{
         url:`/candidate?${params.toString()}`
       }
     }
-  })  , 
+  })  ,  
 
   // add candidate  
   addCandidate:builder.mutation({
     query:(value)=>{ 
-      console.log(value);
+      //console.log(value);
       return{
         url:"/candidate/add-candidate" ,
         method:"POST" ,
@@ -102,7 +121,7 @@ query:(value)=>({
   // update candidate  
   updateCandidate: builder.mutation({
     query:({id , formdata })=>{  
-      console.log(id);
+      //console.log(id);
 return{
   url:`/candidate/${id}` ,
   method:"PATCH" ,
@@ -122,7 +141,7 @@ method:"DELETE"
   // candidate issues post and update  
   candidateIssues:builder.mutation({
     query:({id ,value})=>{  
-      // console.log("mithila",value);
+      // //console.log("mithila",value);
       return{
         url:`/candidate/candidate-issues/${id}` ,
         method:"PATCH" ,
@@ -165,7 +184,12 @@ query:(id)=>({
 
   // FAQ  
   getFaq:builder.query({
-    query:()=>"/faq"
+    query:(page)=>{ 
+      const params= new URLSearchParams() 
+      if(page)params.append("page" ,page)
+      return{
+        url:`/faq?${params.toString()}`} 
+    }
   }) , 
 addFaq:builder.mutation({
 query:(value)=>({
@@ -176,7 +200,7 @@ query:(value)=>({
 }) , 
 updateFaq:builder.mutation({
   query:(data)=>{  
-    console.log("faq data",data);
+    //console.log("faq data",data);
     return{
       url:`/faq/${data?._id}` ,
       method:"PATCH" ,
@@ -205,7 +229,13 @@ updateAbout:builder.mutation({
 
 // Learn about Election 
 getAboutElection:builder.query({
-  query:()=>"/learn"
+  query:(page)=>{ 
+    const params = new URLSearchParams()  
+      if(page)params.append("page" , page)
+    return{
+      urk:`/learn?${params.toString()}`
+    }
+  }
 }) ,
 postAboutElection:builder.mutation({
   query:(value)=>({
@@ -232,7 +262,13 @@ deleteAboutElection:builder.mutation({
 
 // all news  
 getNews:builder.query({
-  query:(value)=>`/news?searchTerm=${value}`
+  query:({page , search})=>{
+    const params = new URLSearchParams()  
+      if(search)params.append("searchTerm" , search)
+      if(page)params.append("page" , page)
+    return{
+    url:`/news?${params.toString()}`
+  }}
 })  ,
 createNews:builder.mutation({
   query:(value)=>({
@@ -265,16 +301,33 @@ method:"DELETE"
 
 // donation history  
 getDonation:builder.query({
-  query:()=>"/donate"
+  query:(page)=>{ 
+    const params= new URLSearchParams() 
+    if(page)params.append("page" ,page)
+    return{ 
+      url:`/donate?${params.toString()}` 
+    } }
 }) , 
 
 // voter important issues  
 getVoterIssues:builder.query({
-  query:()=>"/voter-issue"
+  query:(page)=>{ 
+    const params= new URLSearchParams() 
+    if(page)params.append("page" ,page)
+    return{
+ url:`/voter-issue?${params.toString()}`
+    }
+  }
 }) , 
 // voter Feedback  
-getFeedback:builder.query({
-  query:()=>"/feedback"
+getFeedback:builder.query({ 
+  query:(page)=>{ 
+    const params = new URLSearchParams()  
+    if(page)params.append("page" , page)
+    return{
+      url:`/feedback?${params.toString()}`
+    }
+  } 
 }) ,
 
   })

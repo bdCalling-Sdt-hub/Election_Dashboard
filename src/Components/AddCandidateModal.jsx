@@ -16,7 +16,7 @@ const AddCandidateModal = ({setOpen , open , modalData ,setModalData , refetch }
 
     const handleChange = (e) => { 
       const file = e.target.files[0] 
-      console.log(file);
+      //console.log(file);
       setImgFile(file); 
       setImageUrl(URL.createObjectURL(file))
     };  
@@ -30,7 +30,7 @@ const AddCandidateModal = ({setOpen , open , modalData ,setModalData , refetch }
 
     const onFinish =async(values)=>{ 
       const formdata = new FormData()  
-      console.log(imgFile);  
+      //console.log(imgFile);  
     const {imagess , ...otherValues} = values
       if(imgFile){
         formdata.append("image" ,imgFile)
@@ -42,7 +42,7 @@ const id= modalData?.id
 
       if(modalData?.id){
 await updateCandidate({id, formdata }).then(res=>{
-  // console.log(res); 
+  // //console.log(res); 
   if(res?.data?.success){
     Swal.fire({
         text:res?.data?.message,
@@ -70,7 +70,7 @@ await updateCandidate({id, formdata }).then(res=>{
 })
       }else{
          await addCandidate(formdata).then((res)=>{
-          // console.log(res); 
+          // //console.log(res); 
           if(res?.data?.success){
             Swal.fire({
                 text:res?.data?.message,

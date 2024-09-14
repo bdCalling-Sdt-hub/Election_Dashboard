@@ -2,7 +2,7 @@ import { Modal } from 'antd';
 import React from 'react';
 import { GoDotFill } from 'react-icons/go';
 const ShowCandidateDetails = ({setShowDetails , showDetails , modalData}) => { 
-    console.log(modalData);
+    //console.log(modalData);
     return (
         <div>
                   <Modal

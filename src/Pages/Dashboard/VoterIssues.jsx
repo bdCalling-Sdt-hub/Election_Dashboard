@@ -11,8 +11,8 @@ const VoterIssues = () => {
 const [open,setOpen]=useState(false) 
 const [modalData , SetModalData] = useState(null)   
 const [page , setPage] = useState(1)
-const {data:voterIssues ,refetch} = useGetVoterIssuesQuery() 
-console.log(voterIssues); 
+const {data:voterIssues ,refetch} = useGetVoterIssuesQuery(page) 
+//console.log(voterIssues); 
 
 
 
@@ -27,7 +27,8 @@ const data = voterIssues?.data?.map((value, index)=>({
     {
       title: "S.No",
       dataIndex: "key",
-      key: "key",
+      key: "key", 
+      render:(key)=><p>{((page-1)*10)+key}</p>
     },
     {
       title: "State",
@@ -90,7 +91,8 @@ const data = voterIssues?.data?.map((value, index)=>({
           <Table
             columns={columns}
             dataSource={data}
-            pagination={{ 
+            pagination={{  
+              defaultCurrent:page ,
               total:voterIssues?.pagination?.total , 
               page:page ,
               onChange:(page)=>setPage(page)
@@ -99,7 +101,7 @@ const data = voterIssues?.data?.map((value, index)=>({
           />
         </div>
       </div>
-       <VoterIssuesModal open={open}  setOpen={setOpen} modalData={modalData}/>
+       <VoterIssuesModal  open={open}  setOpen={setOpen} modalData={modalData}/>
     </div>
   );
 };

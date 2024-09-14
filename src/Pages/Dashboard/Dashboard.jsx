@@ -18,7 +18,7 @@ const Dashboard = () => {
   const [image ,setImage] = useState(null) 
   const {data} = useGetProfileQuery()   
   const userInfo = data?.data
-  console.log(data); 
+  //console.log(data); 
   const navigate = useNavigate();  
 
   useEffect(()=>{

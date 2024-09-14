@@ -12,11 +12,11 @@ import ElectionModal from '../../Components/ElectionModal';
 const Election = () => { 
     const [open , setOpen] = useState(false)  
     const [modalData , SetModalData] = useState(null) 
-    const {data:election , refetch} = useGetElectionQuery()   
     const [page ,setPage]=useState(1)
-    console.log(election);
+    const {data:election , refetch} = useGetElectionQuery(page)   
+    //console.log(election);
     const [deleteElection] = useDeleteElectionMutation()
-    // console.log(election);   
+    // //console.log(election);   
     
     const data = election?.data?.map((value , index)=>({
         key:index+1 , 
@@ -65,7 +65,8 @@ const handleDelete=async(id)=>{
         {
             title: "S.No",
             dataIndex: "key",
-            key: "key",
+            key: "key", 
+            render:(key)=><p>{((page-1)*10)+key}</p>
         } ,
         {
             title: "Election Name",
@@ -105,7 +106,8 @@ const handleDelete=async(id)=>{
 <Table
 columns={columns}
 dataSource={data} 
-pagination={{
+pagination={{ 
+  defaultCurrent:page ,
   total:election?.pagination?.total, 
   page:page ,
   onChange:(page)=>setPage(page)

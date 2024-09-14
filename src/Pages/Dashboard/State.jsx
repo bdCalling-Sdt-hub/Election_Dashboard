@@ -18,7 +18,7 @@ const State = () => {
   
     const [deleteState] = useDeleteStateMutation() 
   
-    console.log(states); 
+    //console.log(states); 
 
     const data = states?.data?.map((value , index)=>({
          key:index+1 , 
@@ -67,7 +67,8 @@ const State = () => {
         {
             title: "S.No",
             dataIndex: "key",
-            key: "key",
+            key: "key", 
+            render:(key)=><p>{((page-1)*10)+key}</p>
         } ,
         {
             title: "State Name",
@@ -108,7 +109,8 @@ const State = () => {
       <Table
             columns={columns}
             dataSource={data}
-            pagination={{
+            pagination={{ 
+              defaultCurrent:page ,
               total:states?.pagination?.total, 
              page:page ,
              onChange:(page)=>setPage(page)

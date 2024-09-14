@@ -3,7 +3,7 @@ import React from 'react';
 import { GoDotFill } from 'react-icons/go';
 
 const CandidateDetailsModal = ({open , setOpen , modalData}) => { 
-    console.log(modalData);
+    //console.log(modalData);
     return (
         <div>
                  <Modal

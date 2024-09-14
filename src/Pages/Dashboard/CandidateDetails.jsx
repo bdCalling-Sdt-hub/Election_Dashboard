@@ -18,12 +18,12 @@ const CandidateDetails = () => {
     const [open , setOpen]=useState(false)  
     const [modalData , SetModalData] = useState(null)   
    const [searchValue , setSearchValue]= useState("") 
-  //  console.log(searchValue); 
+  //  //console.log(searchValue); 
     const navigate = useNavigate() 
     const [page , setPage] = useState(1)
-    const {data:candidate , refetch} = useGetCandidateQuery({searchValue,page})    
+    const {data:candidate , refetch} = useGetCandidateQuery({page:page ,search:searchValue})    
     const [deleteCandidateIssues] = useDeleteCandidateIssuesMutation()
-    // console.log(candidate);  
+    // //console.log(candidate);  
 
     const data = candidate?.data?.map((value , index)=>({
         key:index+1  ,  
@@ -96,7 +96,8 @@ const CandidateDetails = () => {
         {
             title: "S.No",
             dataIndex: "key", 
-            key: "key",
+            key: "key", 
+            render:(key)=><p>{((page-1)*10)+key}</p>
         } ,
         {
             title: "Candidate Name",
@@ -160,7 +161,8 @@ const CandidateDetails = () => {
 <Table
             columns={columns}
             dataSource={data}
-            pagination={{
+            pagination={{ 
+              defaultCurrent:page ,
               total:candidate?.pagination?.total   , 
               page:{page} ,
               onChange:(page)=>setPage(page)

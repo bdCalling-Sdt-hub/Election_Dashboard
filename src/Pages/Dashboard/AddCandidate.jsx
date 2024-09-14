@@ -19,10 +19,10 @@ const AddCandidate = () => {
     const [showDetails , setShowDetails]= useState(false)
     const [modalData , setModalData] = useState(null)   
     const [searchValue , setSearchValue]= useState("") 
-    const {data:candidate , refetch} = useGetCandidateQuery(searchValue)   
     const [page ,setPage]=useState(1)
+    const {data:candidate , refetch} = useGetCandidateQuery({page:page ,search:searchValue})   
     const [deleteCandidate] = useDeleteCandidateMutation()
-    console.log(candidate); 
+    //console.log(candidate); 
 
     const data = candidate?.data?.map((value , index)=>({
       key:index+1  ,  
@@ -82,7 +82,8 @@ img: value?.image.startsWith("https")? value?.image : `${imageUrl}${value?.image
         {
             title: "S.No",
             dataIndex: "key",
-            key: "key",
+            key: "key", 
+            render:(key)=><p>{((page-1)*10)+key}</p>
           },
         {
             title: "Candidate Name",
@@ -151,7 +152,8 @@ img: value?.image.startsWith("https")? value?.image : `${imageUrl}${value?.image
       <Table
             columns={columns}
             dataSource={data}
-            pagination={{
+            pagination={{ 
+              defaultCurrent:page , 
               total:candidate?.pagination?.total, 
              page:page ,
              onChange:(page)=>setPage(page)

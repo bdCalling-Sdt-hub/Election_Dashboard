@@ -78,7 +78,7 @@ const AdminProfile = () => {
     } 
 formData.append("name" ,values?.name )
     await updateProfile(formData).then((res)=>{
-      console.log(res);
+      //console.log(res);
     })
    
   } 
@@ -95,8 +95,8 @@ formData.append("name" ,values?.name )
 
 
   const handleChangePassword=async(values)=>{ 
-    console.log(values);
-await changePass(values).then((res)=>console.log(res))
+    //console.log(values);
+await changePass(values)
   }
 
 

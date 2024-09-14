@@ -15,14 +15,14 @@ const FAQ = () => {
     const [openAddModel, setOpenAddModel] = useState(false); 
     const [modalData , setModalData]= useState() 
     const [page , setPage]=useState(1)
-    const {data:faqData ,refetch } = useGetFaqQuery()   
+    const {data:faqData ,refetch } = useGetFaqQuery(page)   
     const [deleteFaq] = useDeleteFaqMutation()
 
-    console.log(faqData);  
+    //console.log(faqData);  
     const faqDatas = faqData?.data 
 
     const handleDelete=(id)=>{ 
-      console.log(id);
+      //console.log(id);
       Swal.fire({
         title: "Are you sure?",
         icon: "warning",
@@ -104,7 +104,7 @@ const FAQ = () => {
           ))}
         </div> 
         <div className="text-end my-2">
-        <Pagination align="end" total={faqData?.pagination?.total} page={page} onChange={(page)=>setPage(page)} />
+        <Pagination align="end" defaultCurrent={page} total={faqData?.pagination?.total} page={page} onChange={(page)=>setPage(page)} />
         </div>
  
         <FaqModal setOpenAddModel={setOpenAddModel} openAddModel={openAddModel} refetch={refetch} modalData={modalData} setModalData={setModalData} />

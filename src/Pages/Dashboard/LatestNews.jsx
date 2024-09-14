@@ -18,10 +18,10 @@ const LatestNews = () => {
     const [deleteNews] = useDeleteNewsMutation()  
     const [page , setPage] =useState(1)
     const [searchValue , setSearchValue]=useState("") 
-    console.log(searchValue); 
-    const {data:news ,refetch} = useGetNewsQuery(searchValue)  
+    //console.log(searchValue); 
+    const {data:news ,refetch} = useGetNewsQuery({page:page ,search:searchValue})  
     const [updateHighlight] =useUpdateHighlightMutation() 
-    console.log(news);
+    //console.log(news);
     const [open , setOpen]= useState(false) 
     const [modalData , setModalData] = useState(null) 
 
@@ -105,7 +105,8 @@ const data = news?.data?.map((value , index)=>({
         {
             title: "S.No" ,
             dataIndex: "key",
-            key: "key",
+            key: "key", 
+            render:(key)=><p>{((page-1)*10)+key}</p>
         } ,
         {
             title: "image" ,
@@ -169,7 +170,8 @@ const data = news?.data?.map((value , index)=>({
       <Table
             columns={columns}
             dataSource={data}
-            pagination={{
+            pagination={{ 
+              defaultCurrent:page,
              total:news?.pagination?.total ,
              page:page ,
             onChange:(page)=>setPage(page)

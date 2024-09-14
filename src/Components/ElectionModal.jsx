@@ -15,7 +15,7 @@ form.setFieldsValue({name:modalData?.name})
     } ,[modalData])
 
 const onFinish =async(values)=>{
-    console.log(values);  
+    //console.log(values);  
     const data = {
         id:modalData?.id ,  
         name:values?.name

@@ -10,8 +10,8 @@ const Feedbacks = () => {
     const [open,setOpen]=useState(false) 
     const [modalData , SetModalData] = useState(null)  
     const [page ,setPage]=useState(1)
-    const {data:feedbacks} = useGetFeedbackQuery()  
-    console.log(feedbacks);
+    const {data:feedbacks} = useGetFeedbackQuery(page)  
+    //console.log(feedbacks);
     
 const data = feedbacks?.data?.map((value , index)=>({
   key: index+1,
@@ -22,7 +22,8 @@ const data = feedbacks?.data?.map((value , index)=>({
         {
           title: "S.No",
           dataIndex: "key",
-          key: "key",
+          key: "key", 
+          render:(key)=><p>{((page-1)*10)+key}</p>
         },
 
         {
@@ -59,7 +60,8 @@ const data = feedbacks?.data?.map((value , index)=>({
       <Table
             columns={columns}
             dataSource={data}
-            pagination={{
+            pagination={{ 
+              defaultCurrent: page ,
              total:feedbacks?.pagination?.total, 
              page:page ,
              onChange:(page)=>setPage(page)

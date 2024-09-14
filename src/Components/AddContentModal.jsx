@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 const AddContentModal = ({open , setOpen ,setModalData ,refetch ,modalData}) => {   
   const [updateAboutElection] = useUpdateAboutElectionMutation() 
   const [postAboutElection] = usePostAboutElectionMutation()
-  console.log(modalData);
+  //console.log(modalData);
   const [form] = Form.useForm()
   const [imgFile, setImgFile] = useState(null); 
   const [imageUrl , setImageUrl] = useState()  
@@ -28,7 +28,7 @@ const AddContentModal = ({open , setOpen ,setModalData ,refetch ,modalData}) => 
     }; 
 
 const onFinish =async(values)=>{
-  console.log(values);  
+  //console.log(values);  
   const formData = new FormData() 
   if(imgFile){
     formData.append("image" ,imgFile)

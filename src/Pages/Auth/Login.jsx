@@ -9,13 +9,13 @@ import { setToLocalStorage } from "../../Util/local-stroage";
 import Swal from "sweetalert2";
 const Login = () => { 
   const [login , {isSuccess , isError , data , error }] = useLoginMutation()    
-  console.log(error);
-  console.log(data);
+  //console.log(error);
+  //console.log(data);
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isSuccess) {
-      // console.log("you login successfully");
+      // //console.log("you login successfully");
       if (data) {
         Swal.fire({
           title: "Login Successful",
@@ -44,7 +44,7 @@ const Login = () => {
 
   const onFinish = async(values) => {
     await login(values).then((res)=>{ 
-      console.log(res);
+      //console.log(res);
     })
   };
 

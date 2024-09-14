@@ -13,10 +13,10 @@ import { useSubscriberQuery } from '../../redux/apiSlices/DashboardSlice';
 
 const SubscriberDetails = () => {  
   
-    const {data:subscriber} = useSubscriberQuery()   
-    const [page ,setPage]=useState(1)
+  const [page ,setPage]=useState(1)
+    const {data:subscriber} = useSubscriberQuery(page)   
   
-    console.log(subscriber); 
+    //console.log(subscriber); 
 
     const data = subscriber?.data?.map((value, index)=>({ 
          key : index+1 ,
@@ -27,7 +27,8 @@ const SubscriberDetails = () => {
         {
             title: "S.No",
             dataIndex: "key",
-            key: "key",
+            key: "key", 
+            render:(key)=><p>{((page-1)*10)+key}</p>
           }, 
           {
             title: "Email",
@@ -51,7 +52,8 @@ const SubscriberDetails = () => {
           <Table
             columns={columns}
             dataSource={data}
-            pagination={{
+            pagination={{  
+              defaultCurrent:page ,
               total:subscriber?.pagination?.total, 
              page:page ,
              onChange:(page)=>setPage(page)

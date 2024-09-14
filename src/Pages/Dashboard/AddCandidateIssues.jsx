@@ -11,8 +11,8 @@ const AddCandidateIssues = () => {
   
     const [candidateInfo , setCandidateInfo]=useState(null) 
 
-    const {data:candidate , refetch} = useGetCandidateQuery()    
-    console.log(candidate);
+    const {data:candidate , refetch} = useGetCandidateQuery({})    
+    //console.log(candidate);
     const [candidateIssues] = useCandidateIssuesMutation()
 
     const location = useLocation(); 
@@ -20,7 +20,7 @@ const AddCandidateIssues = () => {
     const queryParams = new URLSearchParams(location.search);
     const value = queryParams.get('value');
     const newsValue = value ? JSON.parse(decodeURIComponent(value)) : null;   
-    console.log(newsValue);
+    //console.log(newsValue);
 
     const [issues, setIssues] = useState([
       { question: '', answer: '' },

@@ -9,9 +9,9 @@ import moment from "moment";
 
 
 function DonationHistory() {  
-  const {data:donation}= useGetDonationQuery() 
   const [page , setPage]= useState(1)
-  console.log(donation); 
+  const {data:donation}= useGetDonationQuery(page) 
+  //console.log(donation); 
   const data = donation?.data?.data?.map((value , index)=>({
     key: index+1, 
     date: moment(value?.createdAt).format('D MMM  YYYY, h:mm a')  , 
@@ -22,7 +22,7 @@ function DonationHistory() {
     {
       title: 'S.No',
       dataIndex: 'key',
-    
+      render:(key)=><p>{((page-1)*10)+key}</p>
     },
     
     {
@@ -60,7 +60,8 @@ function DonationHistory() {
       <Table
     columns={columns}
     dataSource={data}
-    pagination={{
+    pagination={{ 
+      defaultCurrent:page ,
     total:donation?.pagination?.total  ,
     page:page ,
     onChange:(page)=>setPage(page)

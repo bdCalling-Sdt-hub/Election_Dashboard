@@ -13,7 +13,7 @@ const UpdatePassword = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      // console.log("you login successfully");
+      // //console.log("you login successfully");
       if (data) {
         Swal.fire({
           position: "center",
@@ -42,9 +42,9 @@ const UpdatePassword = () => {
       email:email ,
       ...values
     } 
-    console.log(data);
-//  console.log(values);  
- await resetPass(data).then((res)=>console.log(res))
+    //console.log(data);
+//  //console.log(values);  
+ await resetPass(data)
     // Swal.fire({
     //   title: "Successfully",
     //   text: "Your password has been updated, please change your password regularly to avoid this happening",

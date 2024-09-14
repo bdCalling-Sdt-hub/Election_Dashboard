@@ -14,9 +14,9 @@ const AboutElection = () => {
     const [open , setOpen] = useState(false)   
     const [modalData , setModalData] = useState(null)
     const [page ,setPage]=useState(1)
-    const {data:aboutElection , refetch} = useGetAboutElectionQuery()   
+    const {data:aboutElection , refetch} = useGetAboutElectionQuery(page)   
     const [deleteAboutElection] = useDeleteAboutElectionMutation()
-    console.log(aboutElection); 
+    //console.log(aboutElection); 
     const data = aboutElection?.data?.map((value , index)=>({
         key: index+1 ,
         title:value?.title , 
@@ -117,7 +117,7 @@ const AboutElection = () => {
             columns={columns}
             dataSource={data}
             pagination={{ 
-              current: parseInt(page), 
+              defaultCurrent: parseInt(page), 
               total:aboutElection?.pagination?.total, 
               page:page ,
               onChange:(page)=>setPage(page)

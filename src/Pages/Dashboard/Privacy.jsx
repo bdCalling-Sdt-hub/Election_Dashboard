@@ -9,7 +9,7 @@ const Privacy = () => {
   const [content, setContent] = useState(""); 
   const {data:privacy , refetch} = useGetPrivacyQuery()  
   const [updatePrivacy] = useUpdatePrivacyMutation()
-  console.log(privacy);
+  //console.log(privacy);
  
 useEffect(()=>{ 
    

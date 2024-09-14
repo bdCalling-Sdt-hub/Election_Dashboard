@@ -8,14 +8,14 @@ import { useForgetPassMutation } from "../../redux/apiSlices/AuthSlice";
 const ForgotPassword = () => { 
   const [forgetPass , {isError , isSuccess , data ,error}] = useForgetPassMutation()  
   const [email , setEmail] = useState(null) 
-  console.log(email);
-  console.log(data);
+  //console.log(email);
+  //console.log(data);
   const navigate = useNavigate(); 
 
 
   useEffect(() => {
     if (isSuccess) {
-      // console.log("you login successfully");
+      // //console.log("you login successfully");
       if (data) {
         Swal.fire({
           position: "center",
@@ -45,9 +45,9 @@ const ForgotPassword = () => {
   const onFinish = async(values) => { 
     setEmail(values?.email)
     // localStorage.setItem("email", JSON.stringify(values.email)) 
-    console.log("Received values of form: ", values); 
+    //console.log("Received values of form: ", values); 
     await forgetPass(values).then((res)=>{
-      // console.log(res); 
+      // //console.log(res); 
     })
  
   };

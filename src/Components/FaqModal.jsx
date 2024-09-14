@@ -5,7 +5,7 @@ import Swal from "sweetalert2";
 
 const FaqModal = ({ openAddModel, setOpenAddModel  ,modalData , refetch , setModalData}) => {   
   const [form] = Form.useForm()
-  console.log(modalData);
+  //console.log(modalData);
   const [addFaq] = useAddFaqMutation() 
   const [updateFaq]= useUpdateFaqMutation() 
  
@@ -17,7 +17,7 @@ const FaqModal = ({ openAddModel, setOpenAddModel  ,modalData , refetch , setMod
   } ,[modalData])
 
   const onFinish =async(values)=>{
-console.log(values);  
+//console.log(values);  
 const data ={
   _id:modalData?._id ,
   question:values?.question ,
@@ -26,7 +26,7 @@ const data ={
 
 if(modalData){
 await updateFaq(data).then((res)=>{
-  console.log(res); 
+  //console.log(res); 
   if(res?.data?.success){
     Swal.fire({
         text:res?.data?.message,
@@ -52,7 +52,7 @@ await updateFaq(data).then((res)=>{
 })
 }else{
   await addFaq(values).then((res)=>{
-    console.log(res); 
+    //console.log(res); 
     if(res?.data?.success){
       Swal.fire({
           text:res?.data?.message,
