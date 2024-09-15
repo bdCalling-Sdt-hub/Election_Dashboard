@@ -19,7 +19,7 @@ const {data:voterIssues ,refetch} = useGetVoterIssuesQuery(page)
 const data = voterIssues?.data?.map((value, index)=>({
   key: index+1,
   state:value?.state , 
-  dob : moment(value?.dateOfBirth).format('D MMM  YYYY'),
+  dob : value?.age,
   issues: value?.issues , 
 }))
 
@@ -36,7 +36,7 @@ const data = voterIssues?.data?.map((value, index)=>({
       key: "state",
     },
     {
-      title: "Date of birth ",
+      title: "Age",
       dataIndex: "dob",
       key: "dob",
     },

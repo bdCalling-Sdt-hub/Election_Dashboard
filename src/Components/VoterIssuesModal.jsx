@@ -24,7 +24,7 @@ const VoterIssuesModal = ({open , setOpen ,modalData}) => {
             </div>                
 
             <div  className=' w-full flex my-2'>
-              <p  className='w-1/2 text-sm font-semibold mb-1'>Date of Birth:</p>
+              <p  className='w-1/2 text-sm font-semibold mb-1'>Age:</p>
               <p  className=' w-1/2 text-sm text-start'>{modalData?.dob}</p>
             </div> 
 
