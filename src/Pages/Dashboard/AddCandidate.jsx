@@ -22,7 +22,7 @@ const AddCandidate = () => {
     const [page ,setPage]=useState(1)
     const {data:candidate , refetch} = useGetCandidateQuery({page:page ,search:searchValue})   
     const [deleteCandidate] = useDeleteCandidateMutation()
-    //console.log(candidate); 
+    // console.log(candidate);    
 
     const data = candidate?.data?.map((value , index)=>({
       key:index+1  ,  
@@ -35,7 +35,8 @@ img: value?.image.startsWith("https")? value?.image : `${imageUrl}${value?.image
     state: value?.state ,
     election: value?.election ,
     color: value?.color ,
-    issues:value?.issues
+    issues:value?.issues ,
+    about: value?.about
     }))  
 
     const handleSearch =(e)=>{
@@ -100,11 +101,6 @@ img: value?.image.startsWith("https")? value?.image : `${imageUrl}${value?.image
             dataIndex: "party",
             key: "party",
           }, 
-          {
-            title: "State",
-            dataIndex: "state",
-            key: "state",
-          },
           {
             title: "Election",
             dataIndex: "election",

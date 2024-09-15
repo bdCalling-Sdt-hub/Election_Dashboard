@@ -151,5 +151,9 @@ div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
 }
 :where(.css-dev-only-do-not-override-djtmh8).ant-modal .ant-modal-content {
   padding: 0 !important;
-} 
+}  
+
+.ant-form-item {
+  margin-bottom: 5px
+}
 
