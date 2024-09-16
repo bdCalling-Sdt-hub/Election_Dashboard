@@ -14,7 +14,7 @@ const State = () => {
     const [open , setOpen] = useState(false)  
     const [modalData , SetModalData] = useState(null)  
     const [page ,setPage]=useState(1)
-    const {data:states , refetch} = useGetStateQuery(page)   
+    const {data:states , refetch} = useGetStateQuery({page: page})   
   
     const [deleteState] = useDeleteStateMutation() 
   

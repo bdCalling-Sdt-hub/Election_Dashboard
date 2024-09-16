@@ -17,9 +17,10 @@ const dashboardSlices = api.injectEndpoints({
 
     // state  
     getState:builder.query({
-      query:(page)=>{ 
+      query:({page, limit})=>{ 
         const params= new URLSearchParams() 
         if(page)params.append("page" ,page)
+        if(limit)params.append("limit" ,limit)
         return{
  url:`/state?${params.toString()}`
         }

@@ -6,13 +6,21 @@ import Swal from 'sweetalert2';
 const { Option } = Select; 
 
 const AddCandidateModal = ({setOpen , open , modalData ,setModalData , refetch }) => {    
+  const [limit, setLimit] = useState()
   const [addCandidate] = useAddCandidateMutation() 
   const [updateCandidate] = useUpdateCandidateMutation() 
-  const {data:state} = useGetStateQuery() 
+  const {data:state} = useGetStateQuery({limit: limit}) 
+  console.log(state);
   const {data:election} = useGetElectionQuery()  
   const [form] = Form.useForm()
     const [imgFile, setImgFile] = useState(null); 
     const [imageUrl , setImageUrl] = useState() 
+
+    useEffect(()=>{
+      if(state?.pagination?.total){
+        setLimit(state?.pagination?.total)
+      }
+    },[state])
 
     const handleChange = (e) => { 
       const file = e.target.files[0] 
