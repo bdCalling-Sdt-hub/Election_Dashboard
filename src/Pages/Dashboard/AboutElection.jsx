@@ -16,7 +16,8 @@ const AboutElection = () => {
     const [page ,setPage]=useState(1)
     const {data:aboutElection , refetch} = useGetAboutElectionQuery(page)   
     const [deleteAboutElection] = useDeleteAboutElectionMutation()
-    //console.log(aboutElection); 
+    
+    
     const data = aboutElection?.data?.map((value , index)=>({
         key: index+1 ,
         title:value?.title , 

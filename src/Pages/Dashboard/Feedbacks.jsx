@@ -10,8 +10,7 @@ const Feedbacks = () => {
     const [open,setOpen]=useState(false) 
     const [modalData , SetModalData] = useState(null)  
     const [page ,setPage]=useState(1)
-    const {data:feedbacks} = useGetFeedbackQuery(page)  
-    //console.log(feedbacks);
+    const {data:feedbacks} = useGetFeedbackQuery(page)
     
 const data = feedbacks?.data?.map((value , index)=>({
   key: index+1,

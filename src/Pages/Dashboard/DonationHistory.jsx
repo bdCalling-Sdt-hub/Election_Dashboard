@@ -49,10 +49,11 @@ function DonationHistory() {
       <Title className="">Donation History</Title> 
       <div className=" flex items-center gap-5 ">
      
-      <button className=" flex gap-2 text-white bg-[#07254A]  h-[45px] rounded-lg  px-4 justify-center items-center"> 
+      <div className=" flex gap-2 text-white bg-[#07254A]  h-[45px] rounded-lg  px-4 justify-center items-center"> 
         <span className=" font-[400]">Total Donation :</span> 
         <span className=" font-[450]"> {donation?.data?.totalDonation} USD </span>
-      </button>
+      </div>
+      
       </div>
       </div> 
 

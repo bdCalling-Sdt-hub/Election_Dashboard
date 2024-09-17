@@ -234,7 +234,7 @@ getAboutElection:builder.query({
     const params = new URLSearchParams()  
       if(page)params.append("page" , page)
     return{
-      urk:`/learn?${params.toString()}`
+      url:`/learn?${params.toString()}`
     }
   }
 }) ,

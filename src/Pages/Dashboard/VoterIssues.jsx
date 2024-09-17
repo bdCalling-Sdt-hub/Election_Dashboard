@@ -12,14 +12,14 @@ const [open,setOpen]=useState(false)
 const [modalData , SetModalData] = useState(null)   
 const [page , setPage] = useState(1)
 const {data:voterIssues ,refetch} = useGetVoterIssuesQuery(page) 
-//console.log(voterIssues); 
+console.log(voterIssues); 
 
 
 
 const data = voterIssues?.data?.map((value, index)=>({
   key: index+1,
   state:value?.state , 
-  dob : value?.age,
+  dob : value?.dateOfBirth,
   issues: value?.issues , 
 }))
 
